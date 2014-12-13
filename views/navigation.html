@@ -15,9 +15,11 @@
     </div>
 
     <ul class="nav navbar-nav navbar-right">
-      <li>display name: </li>
       <li class="btn-group" dropdown>
-        <button type="button" class="btn btn-default">Auth</button>
+        <button type="button" class="btn btn-default">
+          <span ng-if="!user">Login</span>
+          <span ng-if="user">{{user.displayName}}</span>
+        </button>
         <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
           <span class="caret"></span>
         </button>

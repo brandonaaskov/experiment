@@ -16,7 +16,6 @@ angular.module('experiment').directive('speechToggle', function($rootScope) {
 
       $rootScope.$on('ba-speech-disable', function() {
         scope.$apply(function () {
-          console.log('speech false')
           scope.speechEnabled = false
         })
       })

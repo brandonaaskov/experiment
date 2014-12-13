@@ -4,11 +4,7 @@ angular.module('experiment', [
   'templates',
   'firebase',
   'ui.bootstrap'
-]).config(function () {
-  console.log('config block')
-}).run(function ($cookies, utils, analytics) {
-  console.log('app run block', utils)
-
+]).run(function ($cookies, utils, analytics) {
   if (!$cookies.guid) {
     $cookies.guid = utils.createGuid()
   }
@@ -138,17 +134,13 @@ angular.module('experiment').directive('filepicker', function($window, firebase,
   }
 })
 
-angular.module('experiment').directive('navigation', function () {
+angular.module('experiment').directive('navigation', function (auth) {
   return  {
     restrict: 'E',
     replace: true,
     templateUrl: 'navigation.html',
     link: function (scope) {
-      console.log('navbar', scope)
-      //scope.auth = auth
-      //scope.user = auth.user
-      //
-      //console.log('user', scope.user)
+      scope.auth = auth
     }
   }
 })
@@ -209,7 +201,6 @@ angular.module('experiment').directive('speechToggle', function($rootScope) {
 
       $rootScope.$on('ba-speech-disable', function() {
         scope.$apply(function () {
-          console.log('speech false')
           scope.speechEnabled = false
         })
       })
@@ -342,17 +333,19 @@ angular.module('experiment').factory('analytics', function() {
   })
 })
 
-angular.module('experiment').service('auth', function($firebase, $firebaseAuth, $cookies, config) {
-  var auth = $firebaseAuth(new Firebase(config.firebase.default))
-  var users = $firebase(new Firebase(config.firebase.users))
+angular.module('experiment').service('auth', function($firebase, $firebaseAuth, $cookies, config, $rootScope) {
+  var auth = $firebaseAuth(config.firebase.default)
+  var users = $firebase(config.firebase.users)
   var user = undefined
 
   var updateUser = function(authData) {
     if (auth.$getAuth()) users.$set(authData.uid, authData[authData.provider])
     else users.$update(authData.uid, authData[authData.provider])
 
-    user = $firebase(new Firebase(config.firebase.users + '/' + authData.uid))
-    console.log('auth.$getAuth()', auth.$getAuth())
+    user = $firebase(config.firebase.users.child(authData.uid)).$asObject()
+    $rootScope.user = user
+    user.$bindTo($rootScope, "user")
+    console.log('firebase user', $rootScope.user)
   }
 
   var authError = function (error) {
@@ -385,9 +378,9 @@ angular.module('experiment').service('auth', function($firebase, $firebaseAuth, 
 angular.module('experiment').constant('config', {
   env: 'development',
   firebase: {
-    default: 'https://drum-machine.firebaseio.com/',
-    users: 'https://drum-machine.firebaseio.com/users',
-    clock: 'https://drum-machine.firebaseio.com/.info/serverTimeOffset',
+    default: new Firebase('https://drum-machine.firebaseio.com/'),
+    users: new Firebase('https://drum-machine.firebaseio.com/users'),
+    clock: new Firebase('https://drum-machine.firebaseio.com/.info/serverTimeOffset'),
     auth: {
       facebook: {
         scope: 'user_friends,user_birthday,friends_birthday',

@@ -4,11 +4,7 @@ angular.module('experiment', [
   'templates',
   'firebase',
   'ui.bootstrap'
-]).config(function () {
-  console.log('config block')
-}).run(function ($cookies, utils, analytics) {
-  console.log('app run block', utils)
-
+]).run(function ($cookies, utils, analytics) {
   if (!$cookies.guid) {
     $cookies.guid = utils.createGuid()
   }
