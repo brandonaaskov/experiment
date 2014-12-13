@@ -1,4 +1,4 @@
-angular.module('experiment', []).service('utils', function() {
+angular.module('experiment').service('utils', function() {
   var isTrueObject = function(obj) {
     if (_.isUndefined(obj)) {
       return false
