@@ -10,7 +10,8 @@
   top: 7px;
 }
 
-.clickable {
+.clickable,
+a {
   cursor: pointer;
 }
 

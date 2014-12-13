@@ -2,19 +2,21 @@ angular.module('experiment').service('auth', function($firebase, $firebaseAuth, 
   var auth = $firebaseAuth(config.firebase.default)
   var users = $firebase(config.firebase.users)
   var user = undefined
+  var unbindUser = undefined
 
   var bindUser = function () {
     var authData = auth.$getAuth()
-    if (authData) {
-      user = $firebase(config.firebase.users.child(authData.uid)).$asObject()
-      $rootScope.user = user
-      user.$bindTo($rootScope, "user")
-    }
-  }()
+    user = (authData) ? $firebase(config.firebase.users.child(authData.uid)).$asObject() : null
+
+    $rootScope.user = user
+    if (user) user.$bindTo($rootScope, "user").then(function (unbind) {
+      unbindUser = unbind
+    })
+  }
 
   var updateUser = function(authData) {
-    if (auth.$getAuth()) users.$set(authData.uid, authData[authData.provider])
-    else users.$update(authData.uid, authData[authData.provider])
+    if (auth.$getAuth()) users.$update(authData.uid, authData[authData.provider])
+    else users.$set(authData.uid, authData[authData.provider])
 
     bindUser()
   }
@@ -40,8 +42,17 @@ angular.module('experiment').service('auth', function($firebase, $firebaseAuth, 
     }
   }
 
+  var logout = function () {
+    unbindUser()
+    auth.$unauth()
+    $rootScope.user = null
+  }
+
+  // init
+  bindUser()
+
   return {
     login: login,
-    user: user
+    logout: logout
   }
 })
