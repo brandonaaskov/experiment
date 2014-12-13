@@ -10,13 +10,13 @@
   top: 7px;
 }
 
-.navbar .navbar-right .speech-toggle {
-  font-size: 30px;
-  padding: 0 8px;
-}
-
 .clickable {
   cursor: pointer;
+}
+
+.speech-toggle {
+  font-size: 30px;
+  padding: 8px;
 }
 
 .ba-speech {
@@ -32,9 +32,4 @@
 .navbar .navbar-right {
   position: relative;
   top: 7px;
-}
-
-.navbar .navbar-right .speech-toggle {
-  font-size: 30px;
-  padding: 0 8px;
 }

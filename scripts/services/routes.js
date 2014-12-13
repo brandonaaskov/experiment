@@ -1,5 +1,8 @@
 var routes = {
   '/': {
+    templateUrl: 'home.html'
+  },
+  '/speech': {
     templateUrl: 'speech.html'
   },
   '/drum-machine': {
