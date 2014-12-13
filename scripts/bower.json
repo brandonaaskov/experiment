@@ -1,0 +1,10 @@
+{
+  "name": "experiment",
+  "version": "0.0.0",
+  "authors": [
+    "brandonaaskov <brandonaaskov@gmail.com>"
+  ],
+  "description": "for experimenting",
+  "main": "build/experiment.js",
+  "license": "MIT"
+}

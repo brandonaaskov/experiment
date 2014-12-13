@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Drum Machine</title>
+
+  <!-- utilities -->
+  <script src="vendor/underscore/underscore.js"></script>
+  <script src="vendor/jquery/dist/jquery.min.js"></script>
+
+  <!-- angular -->
+  <script src="vendor/angular/angular.js"></script>
+  <script src="vendor/angular-cookies/angular-cookies.js"></script>
+
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css">
+  <script src="vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
+  <script src="vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+  <!-- firebase -->
+  <script src="vendor/firebase/firebase-debug.js"></script>
+  <script src="vendor/angularfire/dist/angularfire.js"></script>
+
+  <!-- application -->
+  <link rel="stylesheet" href="build/experiment.css"> <!-- styles build file -->
+  <script src="build/templates.js"></script> <!-- views compiled into $templateCache -->
+  <script src="build/experiment.js"></script> <!-- application build file -->
+</head>
+<body ng-app="experiment">
+  <div class="container">
+
+    <navbar></navbar>
+
+    <div class="row">
+      <h1 class="clickable"
+          speech="Welcome to the jungle! We've got fun and games. We've got everything you want, including angular shtuff.">Welcome to the Experiment</h1>
+    </div>
+  </div>
+
+  <!-- segment io -->
+  <script type="text/javascript">
+    window.analytics=window.analytics||[],window.analytics.methods=["identify","group","track","page","pageview","alias","ready","on","once","off","trackLink","trackForm","trackClick","trackSubmit"],window.analytics.factory=function(t){return function(){var a=Array.prototype.slice.call(arguments);return a.unshift(t),window.analytics.push(a),window.analytics}};for(var i=0;i<window.analytics.methods.length;i++){var key=window.analytics.methods[i];window.analytics[key]=window.analytics.factory(key)}window.analytics.load=function(t){if(!document.getElementById("analytics-js")){var a=document.createElement("script");a.type="text/javascript",a.id="analytics-js",a.async=!0,a.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.io/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n)}},window.analytics.SNIPPET_VERSION="2.0.9",
+    window.analytics.load("2kucux9fa2");
+  </script>
+</body>
+</html>

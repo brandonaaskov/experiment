@@ -1,0 +1,40 @@
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+
+.clickable {
+  cursor: pointer;
+}
+
+.speech-toggle {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 50px;
+}
+
+.ba-speech {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.ba-speech.speaking {
+  color: #1e90ff;
+}
+
+.upload {
+  color: black;
+}
+
+.uploads .video .changed {
+  background-color: #ffff00;
+}
+
+.uploads .grid {
+  font-size: 14px;
+}

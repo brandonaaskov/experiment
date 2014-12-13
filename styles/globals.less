@@ -1,0 +1,16 @@
+@import '../vendor/less-elements/elements';
+@import 'navbar';
+
+@speakingColor: dodgerblue;
+
+.clickable {
+  cursor: pointer;
+}
+
+.ba-speech {
+  .transition(.3s, ease-in-out);
+
+  &.speaking {
+    color: @speakingColor;
+  }
+}
