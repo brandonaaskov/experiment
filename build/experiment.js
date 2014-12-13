@@ -1,14 +1,17 @@
 angular.module('experiment', [
+  'ngRoute',
   'ngCookies',
   'templates',
   'firebase',
   'ui.bootstrap'
-]).run(function ($cookies, utils, analytics, auth) {
+]).config(function () {
+  console.log('config block')
+}).run(function ($cookies, utils, analytics) {
+  console.log('app run block', utils)
+
   if (!$cookies.guid) {
     $cookies.guid = utils.createGuid()
   }
-
-  console.log('app', [utils, auth])
 
   analytics.identify($cookies.guid)
 })
@@ -135,16 +138,17 @@ angular.module('experiment').directive('filepicker', function($window, firebase,
   }
 })
 
-angular.module('experiment').directive('navbar', function (auth) {
+angular.module('experiment').directive('navigation', function () {
   return  {
     restrict: 'E',
-    replace: false,
-    templateUrl: 'navbar.html',
+    replace: true,
+    templateUrl: 'navigation.html',
     link: function (scope) {
-      scope.auth = auth
-      scope.user = auth.user
-
-      console.log('user', scope.user)
+      console.log('navbar', scope)
+      //scope.auth = auth
+      //scope.user = auth.user
+      //
+      //console.log('user', scope.user)
     }
   }
 })
@@ -454,7 +458,27 @@ angular.module('experiment').service('liveSync', function(firebase, $window) {
   }
 })
 
-angular.module('experiment', []).service('utils', function() {
+var routes = {
+  '/': {
+    templateUrl: 'speech.html'
+  },
+  '/drum-machine': {
+    templateUrl: 'drum-machine.html'
+  }
+}
+
+angular.module('experiment').config(function($routeProvider, $locationProvider) {
+  $locationProvider.html5Mode(true)
+  for (var route in routes) {
+    $routeProvider.when(route, routes[route])
+  }
+
+  return $routeProvider.otherwise({
+    redirectTo: '/404'
+  })
+})
+
+angular.module('experiment').service('utils', function() {
   var isTrueObject = function(obj) {
     if (_.isUndefined(obj)) {
       return false

@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
   <meta charset="UTF-8">
-  <title>Drum Machine</title>
+  <title>Experiment</title>
 
   <!-- utilities -->
   <script src="vendor/underscore/underscore.js"></script>
@@ -10,6 +10,7 @@
 
   <!-- angular -->
   <script src="vendor/angular/angular.js"></script>
+  <script src="vendor/angular-route/angular-route.js"></script>
   <script src="vendor/angular-cookies/angular-cookies.js"></script>
 
   <!-- bootstrap -->
@@ -25,16 +26,28 @@
   <link rel="stylesheet" href="build/experiment.css"> <!-- styles build file -->
   <script src="build/templates.js"></script> <!-- views compiled into $templateCache -->
   <script src="build/experiment.js"></script> <!-- application build file -->
+
+  <!--<script src="scripts/app.js"></script>-->
+  <!--<script src="scripts/directives/navigation.js"></script>-->
+  <!--<script src="scripts/directives/speech.js"></script>-->
+  <!--<script src="scripts/directives/speech-toggle.js"></script>-->
+  <!--<script src="scripts/services/analytics.js"></script>-->
+  <!--<script src="scripts/services/auth.js"></script>-->
+  <!--<script src="scripts/services/config.js"></script>-->
+  <!--<script src="scripts/services/firebase.js"></script>-->
+  <!--<script src="scripts/services/live-sync.js"></script>-->
+  <!--<script src="scripts/services/routes.js"></script>-->
+  <!--<script src="scripts/services/utils.js"></script>-->
+  <!--<script src="scripts/services/zencoder.js"></script>-->
 </head>
 <body ng-app="experiment">
-  <div class="container">
+  <div class="container-fluid view-animate-container">
 
-    <navbar></navbar>
+    navigation here
+    <navigation></navigation>
+    under the nav
 
-    <div class="row">
-      <h1 class="clickable"
-          speech="Welcome to the jungle! We've got fun and games. We've got everything you want, including angular shtuff.">Welcome to the Experiment</h1>
-    </div>
+    <div ng-view class="view-animate"></div>
   </div>
 
   <!-- segment io -->

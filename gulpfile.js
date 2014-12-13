@@ -81,9 +81,10 @@ gulp.task('serve', function () {
   console.log('server running on localhost:' + serverPort)
 })
 
-// builds everything to the `dist` directory
+// builds everything to the build directory
 gulp.task('build', ['compileScripts', 'compileViews', 'compileLess', 'compressScripts'])
-gulp.task('dev', ['compileScripts', 'compileViews', 'compileLess', 'watch', 'serve'])
 
 // runs a build and launches a server
+gulp.task('dev', ['compileScripts', 'compileViews', 'compileLess', 'watch', 'serve'])
+
 gulp.task('default', ['dev'])
