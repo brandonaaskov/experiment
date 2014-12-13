@@ -7,9 +7,7 @@ var routes = {
   }
 }
 
-angular.module('experiment').config(function($routeProvider, $locationProvider) {
-  $locationProvider.html5Mode(true)
-
+angular.module('experiment').config(function($routeProvider) {
   for (var route in routes) {
     $routeProvider.when(route, routes[route])
   }

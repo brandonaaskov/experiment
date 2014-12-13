@@ -3,14 +3,20 @@ angular.module('experiment').service('auth', function($firebase, $firebaseAuth, 
   var users = $firebase(config.firebase.users)
   var user = undefined
 
+  var bindUser = function () {
+    var authData = auth.$getAuth()
+    if (authData) {
+      user = $firebase(config.firebase.users.child(authData.uid)).$asObject()
+      $rootScope.user = user
+      user.$bindTo($rootScope, "user")
+    }
+  }()
+
   var updateUser = function(authData) {
     if (auth.$getAuth()) users.$set(authData.uid, authData[authData.provider])
     else users.$update(authData.uid, authData[authData.provider])
 
-    user = $firebase(config.firebase.users.child(authData.uid)).$asObject()
-    $rootScope.user = user
-    user.$bindTo($rootScope, "user")
-    console.log('firebase user', $rootScope.user)
+    bindUser()
   }
 
   var authError = function (error) {
