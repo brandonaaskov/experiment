@@ -20,10 +20,10 @@
     </form>
   </div>
 
-  <div class="row">
-    <h3 class="col-md-2">Beat:</h3>
-    <ol class="beat-numbers col-md-offset-2">
-      <li class="btn col-md-1" ng-repeat="n in [] | range:song.beats * song.measures">{{$index + 1}}</li>
+  <div class="beat-numbers row">
+    <ol class="col-md-offset-2 col-md-10">
+      <li class="btn btn-default"
+          ng-repeat="model in kickCollection.models">{{$index + 1}}</li>
     </ol>
   </div>
 
@@ -33,9 +33,7 @@
     </button>
 
     <span class="bar col-md-10">
-      <span class="measure" ng-repeat="m in [] | range:song.measures">
-        <instrument ng-repeat="b in [] | range:song.beats"></instrument>
-      </span>
+      <instrument ng-repeat="model in kickCollection.models" model="model"></instrument>
     </span>
   </div>
 </div>

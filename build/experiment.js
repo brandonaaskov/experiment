@@ -12,6 +12,30 @@ angular.module('experiment', [
   analytics.identify($cookies.guid)
 })
 
+angular.module('experiment').factory('BaseCollection', function (BaseModel) {
+
+  var BaseCollection = (function () {
+    BaseCollection.prototype.model = BaseModel
+
+    function BaseCollection(models) {
+      if (!models) return
+
+      var isSingular = ! _(models).isArray()
+      if (isSingular) this.models = [models]
+      else this.models = models
+
+      this.models = (this.models).map(function (model) {
+        if (model instanceof BaseModel) return model
+        else return new BaseModel(model)
+      })
+    }
+
+    return BaseCollection
+  })()
+
+  return BaseCollection
+})
+
 
 angular.module('experiment').controller('uploadsController', function($scope, firebase) {
   $scope.userUploads = []
@@ -36,12 +60,95 @@ angular.module('experiment').controller('uploadsController', function($scope, fi
   return $scope.userUploads = firebase.userUploads
 })
 
+angular.module('experiment').service('config', function ($window) {
+  return {
+    env: 'development',
+    firebase: {
+      default: new $window.Firebase('https://drum-machine.firebaseio.com/'),
+      users: new $window.Firebase('https://drum-machine.firebaseio.com/users'),
+      clock: new $window.Firebase('https://drum-machine.firebaseio.com/.info/serverTimeOffset'),
+      auth: {
+        facebook: {
+          scope: 'user_friends,user_birthday,friends_birthday',
+          rememberMe: true
+        },
+        github: {
+          scope: 'user:email',
+          rememberMe: true
+        },
+        twitter: {
+          rememberMe: true
+        }
+      }
+    }
+  }
+})
+
+var routes = {
+  '/': {
+    templateUrl: 'home.html'
+  },
+  '/speech': {
+    templateUrl: 'speech.html'
+  },
+  '/splice': {
+    templateUrl: 'splice.html'
+  }
+}
+
+angular.module('experiment').config(function($routeProvider) {
+  for (var route in routes) {
+    $routeProvider.when(route, routes[route])
+  }
+
+  return $routeProvider.otherwise({
+    redirectTo: '/404'
+  })
+})
+
 angular.module('experiment').filter('range', function () {
   return function (input, total) {
     total = parseInt(total)
     for (var i = 0; i < total; i++) input.push(i)
     return input
   }
+})
+
+angular.module('experiment').factory('BaseModel', function (utils) {
+  var BaseModel = (function () {
+
+    function BaseModel (attrs) {
+      this.attributes = attrs || {}
+    }
+
+    BaseModel.prototype.get = function (key) {
+      return utils.findValue(this.attributes, key)
+    }
+
+    return BaseModel
+  })()
+
+  return BaseModel
+})
+
+angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
+  var InstrumentModel = (function () {
+
+    InstrumentModel.prototype = Object.create(BaseModel.prototype)
+
+    function InstrumentModel (attrs) {
+      var defaults = {
+        type: 'drum',
+        name: 'kick'
+      }
+
+      BaseModel.call(this, _.defaults(attrs, defaults))
+    }
+
+    return InstrumentModel
+  })(BaseModel)
+
+  return InstrumentModel
 })
 
 
@@ -79,24 +186,13 @@ angular.module('experiment').directive('contenteditable', function() {
   }
 })
 
-angular.module('experiment').directive('drumMachine', function ($interval) {
+angular.module('experiment').directive('drumMachine', function ($interval, BaseCollection, InstrumentModel) {
   return {
     restrict: 'E',
-    replace: false,
+    replace: true,
     templateUrl: 'drum-machine.html',
 
     link: function (scope, element) {
-
-      element.find('instrument')
-
-      var loop = undefined
-      scope.isPlaying = false
-      scope.song = {
-        beats: 4,
-        measures: 2,
-        bpm: 120
-      }
-
       var bpmToMs = function (bpm) {
         return Math.round(60/bpm * 1000)
       }
@@ -112,8 +208,30 @@ angular.module('experiment').directive('drumMachine', function ($interval) {
         $interval.cancel(loop)
       }
 
+      var getTotalBeats = function () {
+        return scope.song.beats * scope.song.measures
+      }
+
+      var loop = undefined
+      scope.isPlaying = false
+      scope.song = {
+        beats: 4,
+        measures: 2,
+        bpm: 120
+      }
+
       scope.play = play
-      scope.stop = stop    
+      scope.stop = stop
+      scope.getTotalBeats = getTotalBeats
+
+      var models = []
+      for (var i = 0; i < getTotalBeats(); i++) {
+        var model = new InstrumentModel({sound: 'kick.mp3'})
+        models.push(model)
+      }
+
+      scope.kickCollection = new BaseCollection(models)
+      console.log('collection.models', scope.kickCollection.models)
     }
   }
 })
@@ -188,10 +306,6 @@ angular.module('experiment').directive('icon', function () {
     templateUrl: 'icon.html',
     scope: {
       glyph: '@'
-    },
-
-    link: function (scope) {
-      console.log('scope', scope)
     }
   }
 })
@@ -199,8 +313,10 @@ angular.module('experiment').directive('icon', function () {
 angular.module('experiment').directive('instrument', function () {
   return {
     restrict: 'E',
-    replace: false,
-    scope: {},
+    replace: true,
+    scope: {
+      model: '@'
+    },
     templateUrl: 'instrument.html',
 
     link: function (scope, element) {
@@ -473,30 +589,6 @@ angular.module('experiment').service('auth', function($firebase, $firebaseAuth, 
   }
 })
 
-angular.module('experiment').service('config', function ($window) {
-  return {
-    env: 'development',
-    firebase: {
-      default: new $window.Firebase('https://drum-machine.firebaseio.com/'),
-      users: new $window.Firebase('https://drum-machine.firebaseio.com/users'),
-      clock: new $window.Firebase('https://drum-machine.firebaseio.com/.info/serverTimeOffset'),
-      auth: {
-        facebook: {
-          scope: 'user_friends,user_birthday,friends_birthday',
-          rememberMe: true
-        },
-        github: {
-          scope: 'user:email',
-          rememberMe: true
-        },
-        twitter: {
-          rememberMe: true
-        }
-      }
-    }
-  }
-})
-
 angular.module('experiment').service('firebase', function($firebase, $cookies, config, $rootScope, $q) {
   var clock = new Firebase(config.firebase.clock)
   guid = $cookies.guid
@@ -549,28 +641,6 @@ angular.module('experiment').service('liveSync', function(firebase, $window) {
   return publicApi = {
     sync: sync
   }
-})
-
-var routes = {
-  '/': {
-    templateUrl: 'home.html'
-  },
-  '/speech': {
-    templateUrl: 'speech.html'
-  },
-  '/splice': {
-    templateUrl: 'splice.html'
-  }
-}
-
-angular.module('experiment').config(function($routeProvider) {
-  for (var route in routes) {
-    $routeProvider.when(route, routes[route])
-  }
-
-  return $routeProvider.otherwise({
-    redirectTo: '/404'
-  })
 })
 
 angular.module('experiment').service('utils', function() {

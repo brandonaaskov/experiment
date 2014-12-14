@@ -1,8 +1,10 @@
 angular.module('experiment').directive('instrument', function () {
   return {
     restrict: 'E',
-    replace: false,
-    scope: {},
+    replace: true,
+    scope: {
+      model: '@'
+    },
     templateUrl: 'instrument.html',
 
     link: function (scope, element) {

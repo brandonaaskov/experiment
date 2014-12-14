@@ -2,12 +2,12 @@
   margin-bottom: 20px;
 }
 
-.drum-machine .controls .beat-numbers {
+.drum-machine .beat-numbers ol {
   list-style: none;
+  padding: 0;
 }
 
-.drum-machine .controls .beat-numbers li {
-  text-align: center;
+.drum-machine .beat-numbers ol li {
   margin-right: 10px;
   cursor: default;
 }
@@ -7758,12 +7758,12 @@ button.close {
   margin-bottom: 20px;
 }
 
-.drum-machine .controls .beat-numbers {
+.drum-machine .beat-numbers ol {
   list-style: none;
+  padding: 0;
 }
 
-.drum-machine .controls .beat-numbers li {
-  text-align: center;
+.drum-machine .beat-numbers ol li {
   margin-right: 10px;
   cursor: default;
 }

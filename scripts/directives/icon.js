@@ -5,10 +5,6 @@ angular.module('experiment').directive('icon', function () {
     templateUrl: 'icon.html',
     scope: {
       glyph: '@'
-    },
-
-    link: function (scope) {
-      console.log('scope', scope)
     }
   }
 })
