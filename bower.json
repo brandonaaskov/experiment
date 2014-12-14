@@ -29,8 +29,7 @@
     "speech-synthesis": "latest",
     "underscore": "latest",
     "less-elements": "*",
-    "angular-ui-bootstrap": "~0.12.0",
-    "fs.collections": "~1.3.0"
+    "angular-ui-bootstrap": "~0.12.0"
   },
   "resolutions": {
     "angular": "~1.3.6",

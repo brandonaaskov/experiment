@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-  <meta charset="UTF-8">
-  <base href="/">
   <title>Experiment</title>
+
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
 
   <!-- utilities -->
   <script src="vendor/underscore/underscore.js"></script>
-  <script src="vendor/jquery/dist/jquery.min.js"></script>
 
   <!-- angular -->
   <script src="vendor/angular/angular.js"></script>
   <script src="vendor/angular-route/angular-route.js"></script>
   <script src="vendor/angular-cookies/angular-cookies.js"></script>
-  <script src="vendor/fs.collections/index.js"></script>
 
   <!-- bootstrap -->
-  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css">
   <script src="vendor/angular-bootstrap/ui-bootstrap.min.js"></script>
   <script src="vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
@@ -30,10 +32,10 @@
   <script src="build/experiment.js"></script> <!-- application build file -->
 </head>
 <body ng-app="experiment">
-  <div class="container-fluid view-animate-container">
+  <div class="container-fluid view-animate-container" ng-cloak>
     <navigation></navigation>
 
-    <div ng-view class="view-animate"></div>
+    <div ng-view class="page container-fluid view-animate"></div>
   </div>
 
   <!-- segment io -->

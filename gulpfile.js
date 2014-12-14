@@ -11,16 +11,20 @@ var pkg = require('./package.json'),
     templateCache = require('gulp-angular-templatecache')
 
 // non-gulp stuff i need
-var _ = require('lodash'),
-    http = require('http'),
+var http = require('http'),
     connect = require('connect')
 
-//other stuff
 var paths = {
   scripts: ['scripts/**/*.js'],
   tests: ['tests/**/*.js'],
-  styles: ['styles/**/*.less'],
-  views: ['views/**/*.html'],
+  styles: [
+    'vendor/bootstrap/less/bootstrap.less',
+    'styles/**/*.less'
+  ],
+  views: [
+    'views/**/*.html',
+    'scripts/templates/**/*.html'
+  ],
   concatenatedScripts: ['build/' + pkg.name + '.js']
 }
 
@@ -65,7 +69,6 @@ gulp.task('compileViews', function () {
       .pipe(gulp.dest(buildLocation))
 })
 
-// recompile coffeescript files on change
 gulp.task('watch', function () {
   gulp.watch(paths.scripts, ['build'])
   gulp.watch(paths.tests, ['build'])
