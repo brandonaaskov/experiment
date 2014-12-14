@@ -6,7 +6,8 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
     function InstrumentModel (attrs) {
       var defaults = {
         type: 'drum',
-        name: 'kick'
+        name: 'kick',
+        active: false
       }
 
       BaseModel.call(this, _.defaults(attrs, defaults))

@@ -3,7 +3,7 @@ angular.module('experiment').directive('instrument', function () {
     restrict: 'E',
     replace: true,
     scope: {
-      model: '@'
+      model: '='
     },
     templateUrl: 'instrument.html',
 
@@ -12,7 +12,7 @@ angular.module('experiment').directive('instrument', function () {
 
       element.bind('click', function () {
         scope.$apply(function () {
-          scope.enabled = !scope.enabled
+          scope.model.set('enabled', !scope.model.get('enabled'))
         })
       })
     }

@@ -1,8 +1,8 @@
 <button class="instrument btn"
         ng-class="{
-          'btn-primary': enabled,
-          'btn-default': !enabled,
-          'active': model.active
+          'btn-primary': model.get('active'),
+          'btn-default': !model.get('enabled'),
+          'active': model.get('enabled')
         }">
   inst.
 </button>

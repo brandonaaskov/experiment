@@ -9,6 +9,22 @@ angular.module('experiment').factory('BaseModel', function (utils) {
       return utils.findValue(this.attributes, key)
     }
 
+    BaseModel.prototype.set = function (key, val) {
+      var attrs = undefined
+
+      if (typeof key == 'object') attrs = key
+      else {
+        attrs = {}
+        attrs[key] = val
+
+        for (var aKey in attrs) {
+          var aVal = attrs[aKey];
+          this.attributes[aKey] = aVal;
+        }
+
+      }
+    }
+
     return BaseModel
   })()
 
