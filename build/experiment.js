@@ -52,6 +52,7 @@ angular.module('experiment').factory('InstrumentCollection', function (BaseColle
         var nextIndex = (currentIndex + 1 < this.models.length) ? currentIndex + 1 : 0
         this.models[currentIndex].set('active', false)
         this.models[nextIndex].set('active', true)
+        if (this.models[nextIndex].get('enabled')) this.models[nextIndex].playSound()
       }
       else if (!_.isEmpty(this.models)) {
         _.first(this.models).set('active', true)
@@ -77,30 +78,6 @@ angular.module('experiment').factory('InstrumentCollection', function (BaseColle
   })()
 
   return InstrumentCollection
-})
-
-
-angular.module('experiment').controller('uploadsController', function($scope, firebase) {
-  $scope.userUploads = []
-  $scope.gridOptions = {
-    data: 'userUploads',
-    columnDefs: [
-      {
-        field: 'displayName',
-        displayName: 'Name'
-      }, {
-        field: 'filename',
-        displayName: 'Filename'
-      }, {
-        field: 'job',
-        displayName: 'Zencoder Job'
-      }, {
-        field: 'size',
-        displayName: 'Size'
-      }
-    ]
-  }
-  return $scope.userUploads = firebase.userUploads
 })
 
 angular.module('experiment').service('config', function ($window) {
@@ -150,6 +127,38 @@ angular.module('experiment').config(function($routeProvider) {
 })
 
 
+angular.module('experiment').controller('uploadsController', function($scope, firebase) {
+  $scope.userUploads = []
+  $scope.gridOptions = {
+    data: 'userUploads',
+    columnDefs: [
+      {
+        field: 'displayName',
+        displayName: 'Name'
+      }, {
+        field: 'filename',
+        displayName: 'Filename'
+      }, {
+        field: 'job',
+        displayName: 'Zencoder Job'
+      }, {
+        field: 'size',
+        displayName: 'Size'
+      }
+    ]
+  }
+  return $scope.userUploads = firebase.userUploads
+})
+
+angular.module('experiment').filter('range', function () {
+  return function (input, total) {
+    total = parseInt(total)
+    for (var i = 0; i < total; i++) input.push(i)
+    return input
+  }
+})
+
+
 angular.module('experiment').directive('contenteditable', function() {
   return {
     restrict: 'A',
@@ -184,7 +193,7 @@ angular.module('experiment').directive('contenteditable', function() {
   }
 })
 
-angular.module('experiment').directive('drumMachine', function ($interval, InstrumentCollection, InstrumentModel) {
+angular.module('experiment').directive('drumMachine', function ($interval, InstrumentCollection, InstrumentModel, audio) {
   return {
     restrict: 'E',
     replace: true,
@@ -199,6 +208,8 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
         scope.isPlaying = true
         loop = $interval(function () {
           scope.kickCollection.activateNext()
+          scope.snareCollection.activateNext()
+          scope.hihatCollection.activateNext()
         }, bpmToMs(scope.song.bpm))
       }
 
@@ -221,14 +232,21 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
 
       scope.play = play
       scope.stop = stop
+      scope.audio = audio
 
-      var models = []
+      var kickModels = []
+      var snareModels = []
+      var hihatModels = []
+
       for (var i = 0; i < getTotalBeats(); i++) {
-        var model = new InstrumentModel({sound: 'kick.mp3'})
-        models.push(model)
+        kickModels.push(new InstrumentModel({soundUrl: 'assets/sample-kick.mp3'}))
+        snareModels.push(new InstrumentModel({soundUrl: 'assets/sample-snare.mp3'}))
+        hihatModels.push(new InstrumentModel({soundUrl: 'assets/sample-hihat.mp3'}))
       }
 
-      scope.kickCollection = new InstrumentCollection(models)
+      scope.kickCollection = new InstrumentCollection(kickModels)
+      scope.snareCollection = new InstrumentCollection(snareModels)
+      scope.hihatCollection = new InstrumentCollection(hihatModels)
     }
   }
 })
@@ -307,7 +325,7 @@ angular.module('experiment').directive('icon', function () {
   }
 })
 
-angular.module('experiment').directive('instrument', function () {
+angular.module('experiment').directive('instrument', function ($window, $http, audio) {
   return {
     restrict: 'E',
     replace: true,
@@ -322,6 +340,7 @@ angular.module('experiment').directive('instrument', function () {
       element.bind('click', function () {
         scope.$apply(function () {
           scope.model.set('enabled', !scope.model.get('enabled'))
+          scope.model.loadSound()
         })
       })
     }
@@ -511,14 +530,6 @@ angular.module('experiment').directive('speech', function($window) {
   }
 })
 
-angular.module('experiment').filter('range', function () {
-  return function (input, total) {
-    total = parseInt(total)
-    for (var i = 0; i < total; i++) input.push(i)
-    return input
-  }
-})
-
 angular.module('experiment').factory('BaseModel', function (utils) {
   var BaseModel = (function () {
 
@@ -552,7 +563,7 @@ angular.module('experiment').factory('BaseModel', function (utils) {
   return BaseModel
 })
 
-angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
+angular.module('experiment').factory('InstrumentModel', function (BaseModel, audio) {
   var InstrumentModel = (function () {
 
     InstrumentModel.prototype = Object.create(BaseModel.prototype)
@@ -561,10 +572,20 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
       this.attributes.active = !this.attributes.active
     }
 
+    InstrumentModel.prototype.loadSound = function (url) {
+      var self = this
+      audio.load(url || this.get('soundUrl')).then(function (buffer) {
+        self.set('soundBuffer', buffer)
+      })
+    }
+
+    InstrumentModel.prototype.playSound = function () {
+      audio.play(this.get('soundUrl'))
+    }
+
     function InstrumentModel (attrs) {
       var defaults = {
-        type: 'drum',
-        name: 'kick',
+        enabled: false,
         active: false
       }
 
@@ -591,6 +612,40 @@ angular.module('experiment').factory('analytics', function() {
   $rootScope.$on("$routeChangeSuccess", function() {
     analytics.page()
   })
+})
+
+angular.module('experiment').service('audio', function($window, $http, $q) {
+  var audioContext = $window.AudioContext || $window.webkitAudioContext
+  var context = new audioContext()
+  var source = undefined
+  var deferred = $q.defer()
+
+  var onSoundLoadSuccess = function (res) {
+    context.decodeAudioData(res.data, function (buffer) {
+      source = context.createBufferSource()
+      source.buffer = buffer
+      deferred.resolve(buffer)
+    })
+  }
+
+  var play = function (url) {
+    load(url).then(function (buffer) {
+      source.buffer = buffer
+      source.connect(context.destination)
+      source.start(0)
+    })
+  }
+
+  var load = function (url) {
+    $http.get(url, {responseType: 'arraybuffer'}).then(onSoundLoadSuccess)
+    deferred = $q.defer()
+    return deferred.promise
+  }
+
+  return publicAPI = {
+    load: load,
+    play: play
+  }
 })
 
 angular.module('experiment').service('auth', function($firebase, $firebaseAuth, $cookies, config, $rootScope) {

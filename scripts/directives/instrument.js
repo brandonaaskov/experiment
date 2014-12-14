@@ -1,4 +1,4 @@
-angular.module('experiment').directive('instrument', function () {
+angular.module('experiment').directive('instrument', function ($window, $http, audio) {
   return {
     restrict: 'E',
     replace: true,
@@ -13,6 +13,7 @@ angular.module('experiment').directive('instrument', function () {
       element.bind('click', function () {
         scope.$apply(function () {
           scope.model.set('enabled', !scope.model.get('enabled'))
+          scope.model.loadSound()
         })
       })
     }

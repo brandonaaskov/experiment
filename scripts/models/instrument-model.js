@@ -1,4 +1,4 @@
-angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
+angular.module('experiment').factory('InstrumentModel', function (BaseModel, audio) {
   var InstrumentModel = (function () {
 
     InstrumentModel.prototype = Object.create(BaseModel.prototype)
@@ -7,10 +7,20 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
       this.attributes.active = !this.attributes.active
     }
 
+    InstrumentModel.prototype.loadSound = function (url) {
+      var self = this
+      audio.load(url || this.get('soundUrl')).then(function (buffer) {
+        self.set('soundBuffer', buffer)
+      })
+    }
+
+    InstrumentModel.prototype.playSound = function () {
+      audio.play(this.get('soundUrl'))
+    }
+
     function InstrumentModel (attrs) {
       var defaults = {
-        type: 'drum',
-        name: 'kick',
+        enabled: false,
         active: false
       }
 

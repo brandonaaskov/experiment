@@ -14,6 +14,7 @@ angular.module('experiment').factory('InstrumentCollection', function (BaseColle
         var nextIndex = (currentIndex + 1 < this.models.length) ? currentIndex + 1 : 0
         this.models[currentIndex].set('active', false)
         this.models[nextIndex].set('active', true)
+        if (this.models[nextIndex].get('enabled')) this.models[nextIndex].playSound()
       }
       else if (!_.isEmpty(this.models)) {
         _.first(this.models).set('active', true)

@@ -20,20 +20,36 @@
     </form>
   </div>
 
-  <div class="beat-numbers row">
-    <ol class="col-md-offset-2 col-md-10">
-      <li class="btn btn-default"
-          ng-repeat="model in kickCollection.models">{{$index + 1}}</li>
-    </ol>
-  </div>
-
   <div class="loop row">
-    <button class="btn btn-info sample col-md-2">
+    <button class="btn btn-info sample col-md-2"
+            ng-click="audio.play('assets/sample-kick.mp3')">
       Kick <icon glyph="music"></icon>
     </button>
 
     <span class="bar col-md-10">
       <instrument ng-repeat="model in kickCollection.models" model="model"></instrument>
+    </span>
+  </div>
+
+  <div class="loop row">
+    <button class="btn btn-info sample col-md-2"
+            ng-click="audio.play('assets/sample-snare.mp3')">
+      Snare <icon glyph="music"></icon>
+    </button>
+
+    <span class="bar col-md-10">
+      <instrument ng-repeat="model in snareCollection.models" model="model"></instrument>
+    </span>
+  </div>
+
+  <div class="loop row">
+    <button class="btn btn-info sample col-md-2"
+            ng-click="audio.play('assets/sample-hihat.mp3')">
+      Hi-Hat <icon glyph="music"></icon>
+    </button>
+
+    <span class="bar col-md-10">
+      <instrument ng-repeat="model in hihatCollection.models" model="model"></instrument>
     </span>
   </div>
 </div>

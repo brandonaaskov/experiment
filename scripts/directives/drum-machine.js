@@ -1,4 +1,4 @@
-angular.module('experiment').directive('drumMachine', function ($interval, InstrumentCollection, InstrumentModel) {
+angular.module('experiment').directive('drumMachine', function ($interval, InstrumentCollection, InstrumentModel, audio) {
   return {
     restrict: 'E',
     replace: true,
@@ -13,6 +13,8 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
         scope.isPlaying = true
         loop = $interval(function () {
           scope.kickCollection.activateNext()
+          scope.snareCollection.activateNext()
+          scope.hihatCollection.activateNext()
         }, bpmToMs(scope.song.bpm))
       }
 
@@ -35,14 +37,21 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
 
       scope.play = play
       scope.stop = stop
+      scope.audio = audio
 
-      var models = []
+      var kickModels = []
+      var snareModels = []
+      var hihatModels = []
+
       for (var i = 0; i < getTotalBeats(); i++) {
-        var model = new InstrumentModel({sound: 'kick.mp3'})
-        models.push(model)
+        kickModels.push(new InstrumentModel({soundUrl: 'assets/sample-kick.mp3'}))
+        snareModels.push(new InstrumentModel({soundUrl: 'assets/sample-snare.mp3'}))
+        hihatModels.push(new InstrumentModel({soundUrl: 'assets/sample-hihat.mp3'}))
       }
 
-      scope.kickCollection = new InstrumentCollection(models)
+      scope.kickCollection = new InstrumentCollection(kickModels)
+      scope.snareCollection = new InstrumentCollection(snareModels)
+      scope.hihatCollection = new InstrumentCollection(hihatModels)
     }
   }
 })
