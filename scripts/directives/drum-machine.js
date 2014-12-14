@@ -11,7 +11,20 @@ angular.module('experiment').directive('drumMachine', function ($interval, BaseC
 
       var play = function () {
         scope.isPlaying = true
+        var max = scope.kickCollection.models.length
+        console.log('max', max)
+        var count = -1
         loop = $interval(function () {
+          /**
+           * All of this gorilla math here is just because I really wanted the first button to light up first and not get skipped. And it's late and I'm tired. There's probably a simpler way of doing this but my tired brain can't see that.
+           *
+           * TODO I just realized what to do: the collection is responsible for handling this information. Go young grasshopper. Seek greener pastures.
+           */
+          if (count < 0) count = 0 //makes sure we don't try for -1
+          scope.kickCollection.models[count].set('active', false)
+          if (count + 1 >= max) count = -1 //does the future look dark?
+          else count = count + 1
+          scope.kickCollection.models[count].set('active', true)
         }, bpmToMs(scope.song.bpm))
       }
 
@@ -43,7 +56,6 @@ angular.module('experiment').directive('drumMachine', function ($interval, BaseC
       }
 
       scope.kickCollection = new BaseCollection(models)
-      console.log('collection.models', scope.kickCollection.models)
     }
   }
 })

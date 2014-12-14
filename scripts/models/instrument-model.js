@@ -3,6 +3,10 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
 
     InstrumentModel.prototype = Object.create(BaseModel.prototype)
 
+    InstrumentModel.prototype.toggleActive = function () {
+      this.attributes.active = !this.attributes.active
+    }
+
     function InstrumentModel (attrs) {
       var defaults = {
         type: 'drum',

@@ -36,50 +36,28 @@ angular.module('experiment').factory('BaseCollection', function (BaseModel) {
   return BaseCollection
 })
 
-angular.module('experiment').service('config', function ($window) {
-  return {
-    env: 'development',
-    firebase: {
-      default: new $window.Firebase('https://gunslngr.firebaseio.com/'),
-      users: new $window.Firebase('https://gunslngr.firebaseio.com/users'),
-      clock: new $window.Firebase('https://gunslngr.firebaseio.com/.info/serverTimeOffset'),
-      auth: {
-        facebook: {
-          scope: 'user_friends,user_birthday,friends_birthday',
-          rememberMe: true
-        },
-        github: {
-          scope: 'user:email',
-          rememberMe: true
-        },
-        twitter: {
-          rememberMe: true
-        }
+
+angular.module('experiment').controller('uploadsController', function($scope, firebase) {
+  $scope.userUploads = []
+  $scope.gridOptions = {
+    data: 'userUploads',
+    columnDefs: [
+      {
+        field: 'displayName',
+        displayName: 'Name'
+      }, {
+        field: 'filename',
+        displayName: 'Filename'
+      }, {
+        field: 'job',
+        displayName: 'Zencoder Job'
+      }, {
+        field: 'size',
+        displayName: 'Size'
       }
-    }
+    ]
   }
-})
-
-var routes = {
-  '/': {
-    templateUrl: 'home.html'
-  },
-  '/speech': {
-    templateUrl: 'speech.html'
-  },
-  '/splice': {
-    templateUrl: 'splice.html'
-  }
-}
-
-angular.module('experiment').config(function($routeProvider) {
-  for (var route in routes) {
-    $routeProvider.when(route, routes[route])
-  }
-
-  return $routeProvider.otherwise({
-    redirectTo: '/404'
-  })
+  return $scope.userUploads = firebase.userUploads
 })
 
 
@@ -130,7 +108,20 @@ angular.module('experiment').directive('drumMachine', function ($interval, BaseC
 
       var play = function () {
         scope.isPlaying = true
+        var max = scope.kickCollection.models.length
+        console.log('max', max)
+        var count = -1
         loop = $interval(function () {
+          /**
+           * All of this gorilla math here is just because I really wanted the first button to light up first and not get skipped. And it's late and I'm tired. There's probably a simpler way of doing this but my tired brain can't see that.
+           *
+           * TODO I just realized what to do: the collection is responsible for handling this information. Go young grasshopper. Seek greener pastures.
+           */
+          if (count < 0) count = 0 //makes sure we don't try for -1
+          scope.kickCollection.models[count].set('active', false)
+          if (count + 1 >= max) count = -1 //does the future look dark?
+          else count = count + 1
+          scope.kickCollection.models[count].set('active', true)
         }, bpmToMs(scope.song.bpm))
       }
 
@@ -162,7 +153,6 @@ angular.module('experiment').directive('drumMachine', function ($interval, BaseC
       }
 
       scope.kickCollection = new BaseCollection(models)
-      console.log('collection.models', scope.kickCollection.models)
     }
   }
 })
@@ -445,28 +435,50 @@ angular.module('experiment').directive('speech', function($window) {
   }
 })
 
-
-angular.module('experiment').controller('uploadsController', function($scope, firebase) {
-  $scope.userUploads = []
-  $scope.gridOptions = {
-    data: 'userUploads',
-    columnDefs: [
-      {
-        field: 'displayName',
-        displayName: 'Name'
-      }, {
-        field: 'filename',
-        displayName: 'Filename'
-      }, {
-        field: 'job',
-        displayName: 'Zencoder Job'
-      }, {
-        field: 'size',
-        displayName: 'Size'
+angular.module('experiment').service('config', function ($window) {
+  return {
+    env: 'development',
+    firebase: {
+      default: new $window.Firebase('https://gunslngr.firebaseio.com/'),
+      users: new $window.Firebase('https://gunslngr.firebaseio.com/users'),
+      clock: new $window.Firebase('https://gunslngr.firebaseio.com/.info/serverTimeOffset'),
+      auth: {
+        facebook: {
+          scope: 'user_friends,user_birthday,friends_birthday',
+          rememberMe: true
+        },
+        github: {
+          scope: 'user:email',
+          rememberMe: true
+        },
+        twitter: {
+          rememberMe: true
+        }
       }
-    ]
+    }
   }
-  return $scope.userUploads = firebase.userUploads
+})
+
+var routes = {
+  '/': {
+    templateUrl: 'home.html'
+  },
+  '/speech': {
+    templateUrl: 'speech.html'
+  },
+  '/splice': {
+    templateUrl: 'splice.html'
+  }
+}
+
+angular.module('experiment').config(function($routeProvider) {
+  for (var route in routes) {
+    $routeProvider.when(route, routes[route])
+  }
+
+  return $routeProvider.otherwise({
+    redirectTo: '/404'
+  })
 })
 
 angular.module('experiment').filter('range', function () {
@@ -514,6 +526,10 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
   var InstrumentModel = (function () {
 
     InstrumentModel.prototype = Object.create(BaseModel.prototype)
+
+    InstrumentModel.prototype.toggleActive = function () {
+      this.attributes.active = !this.attributes.active
+    }
 
     function InstrumentModel (attrs) {
       var defaults = {
