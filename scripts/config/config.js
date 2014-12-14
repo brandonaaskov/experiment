@@ -2,9 +2,9 @@ angular.module('experiment').service('config', function ($window) {
   return {
     env: 'development',
     firebase: {
-      default: new $window.Firebase('https://drum-machine.firebaseio.com/'),
-      users: new $window.Firebase('https://drum-machine.firebaseio.com/users'),
-      clock: new $window.Firebase('https://drum-machine.firebaseio.com/.info/serverTimeOffset'),
+      default: new $window.Firebase('https://gunslngr.firebaseio.com/'),
+      users: new $window.Firebase('https://gunslngr.firebaseio.com/users'),
+      clock: new $window.Firebase('https://gunslngr.firebaseio.com/.info/serverTimeOffset'),
       auth: {
         facebook: {
           scope: 'user_friends,user_birthday,friends_birthday',

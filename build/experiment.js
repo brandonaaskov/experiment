@@ -36,37 +36,13 @@ angular.module('experiment').factory('BaseCollection', function (BaseModel) {
   return BaseCollection
 })
 
-
-angular.module('experiment').controller('uploadsController', function($scope, firebase) {
-  $scope.userUploads = []
-  $scope.gridOptions = {
-    data: 'userUploads',
-    columnDefs: [
-      {
-        field: 'displayName',
-        displayName: 'Name'
-      }, {
-        field: 'filename',
-        displayName: 'Filename'
-      }, {
-        field: 'job',
-        displayName: 'Zencoder Job'
-      }, {
-        field: 'size',
-        displayName: 'Size'
-      }
-    ]
-  }
-  return $scope.userUploads = firebase.userUploads
-})
-
 angular.module('experiment').service('config', function ($window) {
   return {
     env: 'development',
     firebase: {
-      default: new $window.Firebase('https://drum-machine.firebaseio.com/'),
-      users: new $window.Firebase('https://drum-machine.firebaseio.com/users'),
-      clock: new $window.Firebase('https://drum-machine.firebaseio.com/.info/serverTimeOffset'),
+      default: new $window.Firebase('https://gunslngr.firebaseio.com/'),
+      users: new $window.Firebase('https://gunslngr.firebaseio.com/users'),
+      clock: new $window.Firebase('https://gunslngr.firebaseio.com/.info/serverTimeOffset'),
       auth: {
         facebook: {
           scope: 'user_friends,user_birthday,friends_birthday',
@@ -104,51 +80,6 @@ angular.module('experiment').config(function($routeProvider) {
   return $routeProvider.otherwise({
     redirectTo: '/404'
   })
-})
-
-angular.module('experiment').filter('range', function () {
-  return function (input, total) {
-    total = parseInt(total)
-    for (var i = 0; i < total; i++) input.push(i)
-    return input
-  }
-})
-
-angular.module('experiment').factory('BaseModel', function (utils) {
-  var BaseModel = (function () {
-
-    function BaseModel (attrs) {
-      this.attributes = attrs || {}
-    }
-
-    BaseModel.prototype.get = function (key) {
-      return utils.findValue(this.attributes, key)
-    }
-
-    return BaseModel
-  })()
-
-  return BaseModel
-})
-
-angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
-  var InstrumentModel = (function () {
-
-    InstrumentModel.prototype = Object.create(BaseModel.prototype)
-
-    function InstrumentModel (attrs) {
-      var defaults = {
-        type: 'drum',
-        name: 'kick'
-      }
-
-      BaseModel.call(this, _.defaults(attrs, defaults))
-    }
-
-    return InstrumentModel
-  })(BaseModel)
-
-  return InstrumentModel
 })
 
 
@@ -512,6 +443,75 @@ angular.module('experiment').directive('speech', function($window) {
       })
     }
   }
+})
+
+
+angular.module('experiment').controller('uploadsController', function($scope, firebase) {
+  $scope.userUploads = []
+  $scope.gridOptions = {
+    data: 'userUploads',
+    columnDefs: [
+      {
+        field: 'displayName',
+        displayName: 'Name'
+      }, {
+        field: 'filename',
+        displayName: 'Filename'
+      }, {
+        field: 'job',
+        displayName: 'Zencoder Job'
+      }, {
+        field: 'size',
+        displayName: 'Size'
+      }
+    ]
+  }
+  return $scope.userUploads = firebase.userUploads
+})
+
+angular.module('experiment').filter('range', function () {
+  return function (input, total) {
+    total = parseInt(total)
+    for (var i = 0; i < total; i++) input.push(i)
+    return input
+  }
+})
+
+angular.module('experiment').factory('BaseModel', function (utils) {
+  var BaseModel = (function () {
+
+    function BaseModel (attrs) {
+      this.attributes = attrs || {}
+    }
+
+    BaseModel.prototype.get = function (key) {
+      return utils.findValue(this.attributes, key)
+    }
+
+    return BaseModel
+  })()
+
+  return BaseModel
+})
+
+angular.module('experiment').factory('InstrumentModel', function (BaseModel) {
+  var InstrumentModel = (function () {
+
+    InstrumentModel.prototype = Object.create(BaseModel.prototype)
+
+    function InstrumentModel (attrs) {
+      var defaults = {
+        type: 'drum',
+        name: 'kick'
+      }
+
+      BaseModel.call(this, _.defaults(attrs, defaults))
+    }
+
+    return InstrumentModel
+  })(BaseModel)
+
+  return InstrumentModel
 })
 
 angular.module('experiment').factory('analytics', function() {
