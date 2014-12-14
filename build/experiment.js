@@ -36,6 +36,49 @@ angular.module('experiment').factory('BaseCollection', function (BaseModel) {
   return BaseCollection
 })
 
+angular.module('experiment').factory('InstrumentCollection', function (BaseCollection, BaseModel, InstrumentModel) {
+
+  var InstrumentCollection = (function () {
+    InstrumentCollection.prototype = Object.create(BaseCollection.prototype)
+    InstrumentCollection.prototype.model = InstrumentModel
+    
+    InstrumentCollection.prototype.activateNext = function () {
+      var activeModel = _(this.models).find(function (model) {
+        return model.get('active')
+      })
+
+      if (activeModel) {
+        var currentIndex = this.models.indexOf(activeModel)
+        var nextIndex = (currentIndex + 1 < this.models.length) ? currentIndex + 1 : 0
+        this.models[currentIndex].set('active', false)
+        this.models[nextIndex].set('active', true)
+      }
+      else if (!_.isEmpty(this.models)) {
+        _.first(this.models).set('active', true)
+      }
+    }
+
+    function InstrumentCollection(models) {
+      if (!models) return
+
+      var isSingular = ! _(models).isArray()
+      if (isSingular) this.models = [models]
+      else this.models = models
+
+      this.models = (this.models).map(function (model) {
+        if (model instanceof BaseModel) return model
+        else return new InstrumentModel(model)
+      })
+
+      BaseCollection.call(this, this.models)
+    }
+
+    return InstrumentCollection
+  })()
+
+  return InstrumentCollection
+})
+
 
 angular.module('experiment').controller('uploadsController', function($scope, firebase) {
   $scope.userUploads = []
@@ -58,6 +101,52 @@ angular.module('experiment').controller('uploadsController', function($scope, fi
     ]
   }
   return $scope.userUploads = firebase.userUploads
+})
+
+angular.module('experiment').service('config', function ($window) {
+  return {
+    env: 'development',
+    firebase: {
+      default: new $window.Firebase('https://gunslngr.firebaseio.com/'),
+      users: new $window.Firebase('https://gunslngr.firebaseio.com/users'),
+      clock: new $window.Firebase('https://gunslngr.firebaseio.com/.info/serverTimeOffset'),
+      auth: {
+        facebook: {
+          scope: 'user_friends,user_birthday,friends_birthday',
+          rememberMe: true
+        },
+        github: {
+          scope: 'user:email',
+          rememberMe: true
+        },
+        twitter: {
+          rememberMe: true
+        }
+      }
+    }
+  }
+})
+
+var routes = {
+  '/': {
+    templateUrl: 'home.html'
+  },
+  '/speech': {
+    templateUrl: 'speech.html'
+  },
+  '/splice': {
+    templateUrl: 'splice.html'
+  }
+}
+
+angular.module('experiment').config(function($routeProvider) {
+  for (var route in routes) {
+    $routeProvider.when(route, routes[route])
+  }
+
+  return $routeProvider.otherwise({
+    redirectTo: '/404'
+  })
 })
 
 
@@ -95,7 +184,7 @@ angular.module('experiment').directive('contenteditable', function() {
   }
 })
 
-angular.module('experiment').directive('drumMachine', function ($interval, BaseCollection, InstrumentModel) {
+angular.module('experiment').directive('drumMachine', function ($interval, InstrumentCollection, InstrumentModel) {
   return {
     restrict: 'E',
     replace: true,
@@ -108,20 +197,8 @@ angular.module('experiment').directive('drumMachine', function ($interval, BaseC
 
       var play = function () {
         scope.isPlaying = true
-        var max = scope.kickCollection.models.length
-        console.log('max', max)
-        var count = -1
         loop = $interval(function () {
-          /**
-           * All of this gorilla math here is just because I really wanted the first button to light up first and not get skipped. And it's late and I'm tired. There's probably a simpler way of doing this but my tired brain can't see that.
-           *
-           * TODO I just realized what to do: the collection is responsible for handling this information. Go young grasshopper. Seek greener pastures.
-           */
-          if (count < 0) count = 0 //makes sure we don't try for -1
-          scope.kickCollection.models[count].set('active', false)
-          if (count + 1 >= max) count = -1 //does the future look dark?
-          else count = count + 1
-          scope.kickCollection.models[count].set('active', true)
+          scope.kickCollection.activateNext()
         }, bpmToMs(scope.song.bpm))
       }
 
@@ -144,7 +221,6 @@ angular.module('experiment').directive('drumMachine', function ($interval, BaseC
 
       scope.play = play
       scope.stop = stop
-      scope.getTotalBeats = getTotalBeats
 
       var models = []
       for (var i = 0; i < getTotalBeats(); i++) {
@@ -152,7 +228,7 @@ angular.module('experiment').directive('drumMachine', function ($interval, BaseC
         models.push(model)
       }
 
-      scope.kickCollection = new BaseCollection(models)
+      scope.kickCollection = new InstrumentCollection(models)
     }
   }
 })
@@ -433,52 +509,6 @@ angular.module('experiment').directive('speech', function($window) {
       })
     }
   }
-})
-
-angular.module('experiment').service('config', function ($window) {
-  return {
-    env: 'development',
-    firebase: {
-      default: new $window.Firebase('https://gunslngr.firebaseio.com/'),
-      users: new $window.Firebase('https://gunslngr.firebaseio.com/users'),
-      clock: new $window.Firebase('https://gunslngr.firebaseio.com/.info/serverTimeOffset'),
-      auth: {
-        facebook: {
-          scope: 'user_friends,user_birthday,friends_birthday',
-          rememberMe: true
-        },
-        github: {
-          scope: 'user:email',
-          rememberMe: true
-        },
-        twitter: {
-          rememberMe: true
-        }
-      }
-    }
-  }
-})
-
-var routes = {
-  '/': {
-    templateUrl: 'home.html'
-  },
-  '/speech': {
-    templateUrl: 'speech.html'
-  },
-  '/splice': {
-    templateUrl: 'splice.html'
-  }
-}
-
-angular.module('experiment').config(function($routeProvider) {
-  for (var route in routes) {
-    $routeProvider.when(route, routes[route])
-  }
-
-  return $routeProvider.otherwise({
-    redirectTo: '/404'
-  })
 })
 
 angular.module('experiment').filter('range', function () {
