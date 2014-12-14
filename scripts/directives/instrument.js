@@ -1,7 +1,7 @@
 angular.module('experiment').directive('instrument', function () {
   return {
     restrict: 'E',
-    replace: true,
+    replace: false,
     scope: {},
     templateUrl: 'instrument.html',
 

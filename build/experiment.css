@@ -2,6 +2,16 @@
   margin-bottom: 20px;
 }
 
+.drum-machine .controls .beat-numbers {
+  list-style: none;
+}
+
+.drum-machine .controls .beat-numbers li {
+  text-align: center;
+  margin-right: 10px;
+  cursor: default;
+}
+
 .drum-machine .instrument {
   margin-right: 10px;
 }
@@ -7746,6 +7756,16 @@ button.close {
 
 .drum-machine .row {
   margin-bottom: 20px;
+}
+
+.drum-machine .controls .beat-numbers {
+  list-style: none;
+}
+
+.drum-machine .controls .beat-numbers li {
+  text-align: center;
+  margin-right: 10px;
+  cursor: default;
 }
 
 .drum-machine .instrument {

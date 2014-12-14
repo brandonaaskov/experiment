@@ -36,6 +36,14 @@ angular.module('experiment').controller('uploadsController', function($scope, fi
   return $scope.userUploads = firebase.userUploads
 })
 
+angular.module('experiment').filter('range', function () {
+  return function (input, total) {
+    total = parseInt(total)
+    for (var i = 0; i < total; i++) input.push(i)
+    return input
+  }
+})
+
 
 angular.module('experiment').directive('contenteditable', function() {
   return {
@@ -71,41 +79,32 @@ angular.module('experiment').directive('contenteditable', function() {
   }
 })
 
-angular.module('experiment').directive('drumLoop', function ($interval, utils) {
+angular.module('experiment').directive('drumMachine', function ($interval) {
   return {
     restrict: 'E',
     replace: false,
-    templateUrl: 'drum-loop.html',
+    templateUrl: 'drum-machine.html',
 
-    link: function (scope) {
+    link: function (scope, element) {
+
+      element.find('instrument')
+
       var loop = undefined
       scope.isPlaying = false
-      scope.timeSignature = {
+      scope.song = {
         beats: 4,
-        note: 4
+        measures: 2,
+        bpm: 120
       }
 
-      var setTimeSignature = function (beats, note) {
-        var beats = beats || 4
-        var note = note || 4
-
-        var timeSignature = {
-          beats: beats,
-          note: note
-        }
-
-        utils.override(scope.timeSignature, timeSignature)
-      }
-
-      var beatsPerMillisecond = function (bpm) {
-        var bpm = bpm || 120
+      var bpmToMs = function (bpm) {
         return Math.round(60/bpm * 1000)
       }
 
       var play = function () {
         scope.isPlaying = true
         loop = $interval(function () {
-        }, beatsPerMillisecond())
+        }, bpmToMs(scope.song.bpm))
       }
 
       var stop = function () {
@@ -113,11 +112,8 @@ angular.module('experiment').directive('drumLoop', function ($interval, utils) {
         $interval.cancel(loop)
       }
 
-      //init
-      setTimeSignature()
-
       scope.play = play
-      scope.stop = stop
+      scope.stop = stop    
     }
   }
 })
@@ -203,7 +199,7 @@ angular.module('experiment').directive('icon', function () {
 angular.module('experiment').directive('instrument', function () {
   return {
     restrict: 'E',
-    replace: true,
+    replace: false,
     scope: {},
     templateUrl: 'instrument.html',
 
@@ -562,8 +558,8 @@ var routes = {
   '/speech': {
     templateUrl: 'speech.html'
   },
-  '/drum-machine': {
-    templateUrl: 'drum-machine.html'
+  '/splice': {
+    templateUrl: 'splice.html'
   }
 }
 

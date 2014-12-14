@@ -1,0 +1,41 @@
+<div class="drum-machine">
+  <div class="controls row">
+    <button class="btn btn-lg btn-success col-md-2"
+            ng-show="!isPlaying"
+            ng-click="play()">Play</button>
+
+    <button class="btn btn-lg btn-danger col-md-2"
+            ng-show="isPlaying"
+            ng-click="stop()">Stop</button>
+
+    <form class="form-inline col-md-2" role="form">
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon">BPM</div>
+          <input type="text"
+                 class="form-control bpm"
+                 ng-model="song.bpm">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <h3 class="col-md-2">Beat:</h3>
+    <ol class="beat-numbers col-md-offset-2">
+      <li class="btn col-md-1" ng-repeat="n in [] | range:song.beats * song.measures">{{$index + 1}}</li>
+    </ol>
+  </div>
+
+  <div class="loop row">
+    <button class="btn btn-info sample col-md-2">
+      Kick <icon glyph="music"></icon>
+    </button>
+
+    <span class="bar col-md-10">
+      <span class="measure" ng-repeat="m in [] | range:song.measures">
+        <instrument ng-repeat="b in [] | range:song.beats"></instrument>
+      </span>
+    </span>
+  </div>
+</div>

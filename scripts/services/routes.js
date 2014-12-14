@@ -5,8 +5,8 @@ var routes = {
   '/speech': {
     templateUrl: 'speech.html'
   },
-  '/drum-machine': {
-    templateUrl: 'drum-machine.html'
+  '/splice': {
+    templateUrl: 'splice.html'
   }
 }
 

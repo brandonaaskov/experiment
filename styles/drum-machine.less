@@ -3,7 +3,21 @@
     margin-bottom: 20px;
   }
 
+  @instrumentMarginRight: 10px;
+
+  .controls {
+    .beat-numbers {
+      list-style: none;
+
+      li {
+        text-align: center;
+        margin-right: @instrumentMarginRight;
+        cursor: default;
+      }
+    }
+  }
+
   .instrument {
-    margin-right: 10px;
+    margin-right: @instrumentMarginRight;
   }
 }
