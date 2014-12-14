@@ -203,7 +203,7 @@ angular.module('experiment').directive('icon', function () {
 angular.module('experiment').directive('instrument', function () {
   return {
     restrict: 'E',
-    replace: false,
+    replace: true,
     scope: {},
     templateUrl: 'instrument.html',
 

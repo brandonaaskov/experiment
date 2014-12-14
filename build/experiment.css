@@ -1,3 +1,10 @@
+.drum-machine .row {
+  margin-bottom: 20px;
+}
+
+.drum-machine .instrument {
+  margin-right: 10px;
+}
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 
 html {
@@ -315,8 +322,8 @@ th {
 
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url("../fonts/glyphicons-halflings-regular.eot");
-  src: url("../fonts/glyphicons-halflings-regular.eot?#iefix") format('embedded-opentype'), url("../fonts/glyphicons-halflings-regular.woff") format('woff'), url("../fonts/glyphicons-halflings-regular.ttf") format('truetype'), url("../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format('svg');
+  src: url("../vendor/bootstrap/fonts/glyphicons-halflings-regular.eot");
+  src: url("../vendor/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix") format('embedded-opentype'), url("../vendor/bootstrap/fonts/glyphicons-halflings-regular.woff") format('woff'), url("../vendor/bootstrap/fonts/glyphicons-halflings-regular.ttf") format('truetype'), url("../vendor/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format('svg');
 }
 
 .glyphicon {
@@ -7721,19 +7728,6 @@ button.close {
     display: none !important;
   }
 }
-.drum-machine .row {
-  margin-bottom: 20px;
-}
-
-.drum-machine .instrument {
-  margin-right: 10px;
-}
-/*---------------------------------------------------
-    LESS Elements 0.9
-  ---------------------------------------------------
-    A set of useful LESS mixins
-    More info at: http://lesselements.com
-  ---------------------------------------------------*/
 
 .navbar .navbar-right {
   position: relative;
@@ -7748,17 +7742,6 @@ button.close {
 .speech-toggle {
   font-size: 30px;
   padding: 8px;
-}
-
-.ba-speech {
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-}
-
-.ba-speech.speaking {
-  color: #1e90ff;
 }
 
 .drum-machine .row {
@@ -7785,4 +7768,8 @@ a {
   position: relative;
   top: 7px;
   right: 7px;
+}
+.speech-toggle {
+  font-size: 30px;
+  padding: 8px;
 }

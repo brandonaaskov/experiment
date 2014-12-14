@@ -17,10 +17,7 @@ var http = require('http'),
 var paths = {
   scripts: ['scripts/**/*.js'],
   tests: ['tests/**/*.js'],
-  styles: [
-    'vendor/bootstrap/less/bootstrap.less',
-    'styles/**/*.less'
-  ],
+  styles: ['styles/**/*.less'],
   views: [
     'views/**/*.html',
     'scripts/templates/**/*.html'
