@@ -13,7 +13,6 @@ angular.module('experiment').directive('instrument', function ($window, $http, a
       element.bind('click', function () {
         scope.$apply(function () {
           scope.model.set('enabled', !scope.model.get('enabled'))
-          scope.model.loadSound()
         })
       })
     }

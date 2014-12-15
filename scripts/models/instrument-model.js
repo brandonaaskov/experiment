@@ -10,12 +10,13 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel, aud
     InstrumentModel.prototype.loadSound = function (url) {
       var self = this
       audio.load(url || this.get('soundUrl')).then(function (source) {
+        console.log('setting sound', source)
         self.set('sound', source)
       })
     }
 
     InstrumentModel.prototype.playSound = function () {
-      audio.play(this.get('soundUrl'))
+      audio.play(this.get('sound'))
     }
 
     function InstrumentModel (attrs) {
@@ -25,6 +26,8 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel, aud
       }
 
       BaseModel.call(this, _.defaults(attrs, defaults))
+
+      if (this.get('soundUrl')) this.loadSound(this.get('soundUrl'))
     }
 
     return InstrumentModel
