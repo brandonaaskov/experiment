@@ -38,15 +38,9 @@ angular.module('experiment').service('utils', function() {
     var foundValue = null
 
     _.find(obj, function(value, key) {
-      if (String(key).toLowerCase() === String(propToFind).toLowerCase()) {
-        foundValue = value
-      }
-      else if (_.isObject(value) && !_.isElement(value)) {
-        foundValue = findValue(value, propToFind)
-      }
-      if (foundValue != null) {
-        return foundValue
-      }
+      if (String(key).toLowerCase() === String(propToFind).toLowerCase()) foundValue = value
+      else if (isTrueObject(value) && !_.isElement(value)) foundValue = findValue(value, propToFind)
+      if (foundValue) return foundValue
     })
 
     return foundValue

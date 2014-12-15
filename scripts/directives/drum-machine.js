@@ -4,7 +4,7 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
     replace: true,
     templateUrl: 'drum-machine.html',
 
-    link: function (scope, element) {
+    link: function (scope) {
       var bpmToMs = function (bpm) {
         return Math.round(60/bpm * 1000)
       }

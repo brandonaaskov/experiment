@@ -9,8 +9,8 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel, aud
 
     InstrumentModel.prototype.loadSound = function (url) {
       var self = this
-      audio.load(url || this.get('soundUrl')).then(function (buffer) {
-        self.set('soundBuffer', buffer)
+      audio.load(url || this.get('soundUrl')).then(function (source) {
+        self.set('sound', source)
       })
     }
 

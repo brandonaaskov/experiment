@@ -1,20 +1,18 @@
 angular.module('experiment').service('audio', function($window, $http, $q) {
   var audioContext = $window.AudioContext || $window.webkitAudioContext
   var context = new audioContext()
-  var source = undefined
   var deferred = $q.defer()
 
   var onSoundLoadSuccess = function (res) {
     context.decodeAudioData(res.data, function (buffer) {
-      source = context.createBufferSource()
+      var source = context.createBufferSource()
       source.buffer = buffer
-      deferred.resolve(buffer)
+      deferred.resolve(source)
     })
   }
 
   var play = function (url) {
-    load(url).then(function (buffer) {
-      source.buffer = buffer
+    load(url).then(function (source) {
       source.connect(context.destination)
       source.start(0)
     })

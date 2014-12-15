@@ -6,7 +6,7 @@ angular.module('experiment').factory('BaseModel', function (utils) {
     }
 
     BaseModel.prototype.get = function (key) {
-      return utils.findValue(this.attributes, key)
+      return this.attributes[key]
     }
 
     BaseModel.prototype.set = function (key, val) {
