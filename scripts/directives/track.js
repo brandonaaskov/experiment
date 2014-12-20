@@ -9,12 +9,16 @@ angular.module('experiment').directive('track', function (BeatCollection, BeatMo
     },
 
     link: function (scope) {
-      console.log('track: scope.totalBeats', scope.totalBeats)
       var models = []
       for (var i = 0, length = scope.totalBeats; i < length; i++) {
         models.push(new BeatModel())
       }
-      scope.collection = new BeatCollection(models)
+      scope.beatCollection = new BeatCollection(models)
+
+      scope.$on('playInstrument', function () {
+        console.log('playInstrument fired')
+        scope.instrument.playSound()
+      })
     }
   }
 })

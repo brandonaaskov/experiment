@@ -1,4 +1,4 @@
-angular.module('experiment').factory('BeatModel', function (BaseModel, audio) {
+angular.module('experiment').factory('BeatModel', function (BaseModel) {
   var BeatModel = (function () {
 
     BeatModel.prototype = Object.create(BaseModel.prototype)
@@ -9,7 +9,7 @@ angular.module('experiment').factory('BeatModel', function (BaseModel, audio) {
         active: false
       }
 
-      BaseModel.call(this, _.defaults(attrs, defaults))
+      BaseModel.call(this, _.defaults(attrs || {}, defaults))
     }
 
     return BeatModel

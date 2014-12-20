@@ -31,7 +31,7 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel, aud
         audioBuffer: undefined
       }
 
-      BaseModel.call(this, _.defaults(attrs, defaults))
+      BaseModel.call(this, _.defaults(attrs || {}, defaults))
 
       var assetUrl = this.get('soundUrl')
       if (assetUrl) this.loadSound(assetUrl)

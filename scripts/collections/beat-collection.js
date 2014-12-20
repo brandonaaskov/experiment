@@ -1,4 +1,4 @@
-angular.module('experiment').factory('BeatCollection', function (BaseCollection, BaseModel, BeatModel) {
+angular.module('experiment').factory('BeatCollection', function (BaseCollection, BaseModel, BeatModel, $rootScope) {
 
   var BeatCollection = (function () {
     BeatCollection.prototype = Object.create(BaseCollection.prototype)
@@ -14,7 +14,6 @@ angular.module('experiment').factory('BeatCollection', function (BaseCollection,
         var nextIndex = (currentIndex + 1 < this.models.length) ? currentIndex + 1 : 0
         this.models[currentIndex].set('active', false)
         this.models[nextIndex].set('active', true)
-        if (this.models[nextIndex].get('enabled')) this.models[nextIndex].playSound()
       }
       else if (!_.isEmpty(this.models)) {
         _.first(this.models).set('active', true)
@@ -22,18 +21,19 @@ angular.module('experiment').factory('BeatCollection', function (BaseCollection,
     }
 
     function BeatCollection(models) {
-      if (!models) return
+      this.models = []
 
-      var isSingular = ! _(models).isArray()
-      if (isSingular) this.models = [models]
-      else this.models = models
-
-      this.models = (this.models).map(function (model) {
+      this.models = (models).map(function (model) {
         if (model instanceof BaseModel) return model
         else return new BeatModel(model)
       })
 
       BaseCollection.call(this, this.models)
+
+      var self = this
+      $rootScope.$on('activateNextBeat', function () {
+        self.activateNext()
+      })
     }
 
     return BeatCollection

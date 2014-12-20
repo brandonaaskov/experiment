@@ -1,4 +1,4 @@
-angular.module('experiment').directive('drumMachine', function ($interval, InstrumentModel, audio) {
+angular.module('experiment').directive('drumMachine', function ($interval, $rootScope, InstrumentModel, audio) {
   return {
     restrict: 'E',
     replace: true,
@@ -16,6 +16,7 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
           //scope.kickCollection.activateNext()
           //scope.snareCollection.activateNext()
           //scope.hihatCollection.activateNext()
+          $rootScope.$broadcast('activateNextBeat')
         }, bpmToMs(scope.song.bpm))
       }
 
@@ -32,7 +33,6 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
         bpm: 120
       }
       scope.song.totalBeats = scope.song.beats * scope.song.measures
-      console.log('scope.song.totalBeats', scope.song.totalBeats)
 
       scope.play = play
       scope.stop = stop
@@ -52,8 +52,6 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
       scope.instruments = _(instruments).map(function (instrument) {
         return new InstrumentModel(instrument)
       })
-
-      console.log('scope.instruments', scope.instruments)
     }
   }
 })
