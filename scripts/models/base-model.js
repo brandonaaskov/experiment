@@ -12,7 +12,7 @@ angular.module('experiment').factory('BaseModel', function (utils) {
     BaseModel.prototype.set = function (key, val) {
       var attrs = undefined
 
-      if (typeof key == 'object') attrs = key
+      if (utils.isTrueObject(key)) attrs = key
       else {
         attrs = {}
         attrs[key] = val

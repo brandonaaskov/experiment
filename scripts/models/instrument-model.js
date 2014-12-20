@@ -1,22 +1,28 @@
-angular.module('experiment').factory('InstrumentModel', function (BaseModel, audio) {
+angular.module('experiment').factory('InstrumentModel', function (BaseModel, audio, $timeout) {
   var InstrumentModel = (function () {
 
     InstrumentModel.prototype = Object.create(BaseModel.prototype)
 
-    InstrumentModel.prototype.toggleActive = function () {
-      this.attributes.active = !this.attributes.active
-    }
-
     InstrumentModel.prototype.loadSound = function (url) {
       var self = this
-      audio.load(url || this.get('soundUrl')).then(function (source) {
-        console.log('setting sound', source)
-        self.set('sound', source)
+      var promise = audio.load(url || this.get('soundUrl'))
+      promise.then(function (buffer) {
+        self.set('audioBuffer', buffer)
       })
+
+      return promise
     }
 
     InstrumentModel.prototype.playSound = function () {
-      audio.play(this.get('sound'))
+      var buffer = this.get('audioBuffer')
+      if (buffer) audio.play(buffer)
+      else {
+        var url = this.get('soundUrl')
+        var self = this
+        this.loadSound(url).then(function () {
+          audio.play(self.get('audioBuffer'))
+        })
+      }
     }
 
     function InstrumentModel (attrs) {
@@ -27,7 +33,8 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel, aud
 
       BaseModel.call(this, _.defaults(attrs, defaults))
 
-      if (this.get('soundUrl')) this.loadSound(this.get('soundUrl'))
+      var assetUrl = this.get('soundUrl')
+      if (assetUrl) this.loadSound(this.get('assetUrl'))
     }
 
     return InstrumentModel

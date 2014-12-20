@@ -5,25 +5,25 @@ angular.module('experiment').service('audio', function($window, $http, $q) {
 
   var onSoundLoadSuccess = function (res) {
     context.decodeAudioData(res.data, function (buffer) {
-      var source = context.createBufferSource()
-      source.buffer = buffer
-      source.connect(context.destination)
-      deferred.resolve(source)
+      deferred.resolve(buffer)
     })
   }
 
-  //TODO: this is the issue: the source objects need to connect in a chain first and then connect to the destination
-  //TODO: an instrument shouldn't be a button on the screen. an instrument is == a row/loop/pattern
-
-  var play = function (sound) {
-    if (_.isArray(sound)) {
-      _.each(sound, function (source) {
-
+  var play = function (buffer) {
+    if (_.isArray(buffer)) {
+      _.reduce(buffer, function (audioPipe, source) {
+        console.log('source', source) //TODO finish this reduce method
+        return audioPipe.connect(source)
       })
     }
-    if (sound instanceof AudioBufferSourceNode) sound.start(0)
+    else if (buffer instanceof AudioBuffer) {
+      var source = context.createBufferSource()
+      source.buffer = buffer
+      source.connect(context.destination)
+      source.start(0)
+    }
     else {
-      load(sound).then(play)
+      throw new Error("audio.play requires an AudioBuffer or an array of AudioBuffers")
     }
   }
 
