@@ -1,9 +1,3 @@
 <span class="loop">
-  <button class="btn beat"
-          ng-repeat="model in collection.models"
-          ng-class="{
-            'btn-primary': model.attributes.enabled,
-            'btn-default': !model.attributes.enabled,
-            'active': model.attributes.active
-          }">&nbsp;</button>
+  <beat ng-repeat="model in collection.models" model="model"></beat>
 </span>

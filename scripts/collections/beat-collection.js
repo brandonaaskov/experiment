@@ -1,10 +1,10 @@
-angular.module('experiment').factory('InstrumentCollection', function (BaseCollection, BaseModel, InstrumentModel) {
+angular.module('experiment').factory('BeatCollection', function (BaseCollection, BaseModel, BeatModel) {
 
-  var InstrumentCollection = (function () {
-    InstrumentCollection.prototype = Object.create(BaseCollection.prototype)
-    InstrumentCollection.prototype.model = InstrumentModel
+  var BeatCollection = (function () {
+    BeatCollection.prototype = Object.create(BaseCollection.prototype)
+    BeatCollection.prototype.model = BeatModel
     
-    InstrumentCollection.prototype.activateNext = function () {
+    BeatCollection.prototype.activateNext = function () {
       var activeModel = _(this.models).find(function (model) {
         return model.get('active')
       })
@@ -21,7 +21,7 @@ angular.module('experiment').factory('InstrumentCollection', function (BaseColle
       }
     }
 
-    function InstrumentCollection(models) {
+    function BeatCollection(models) {
       if (!models) return
 
       var isSingular = ! _(models).isArray()
@@ -30,14 +30,14 @@ angular.module('experiment').factory('InstrumentCollection', function (BaseColle
 
       this.models = (this.models).map(function (model) {
         if (model instanceof BaseModel) return model
-        else return new InstrumentModel(model)
+        else return new BeatModel(model)
       })
 
       BaseCollection.call(this, this.models)
     }
 
-    return InstrumentCollection
+    return BeatCollection
   })()
 
-  return InstrumentCollection
+  return BeatCollection
 })

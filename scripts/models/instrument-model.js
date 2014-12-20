@@ -1,4 +1,4 @@
-angular.module('experiment').factory('InstrumentModel', function (BaseModel, audio, $timeout) {
+angular.module('experiment').factory('InstrumentModel', function (BaseModel, audio) {
   var InstrumentModel = (function () {
 
     InstrumentModel.prototype = Object.create(BaseModel.prototype)
@@ -27,14 +27,14 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel, aud
 
     function InstrumentModel (attrs) {
       var defaults = {
-        enabled: false,
-        active: false
+        soundUrl: undefined,
+        audioBuffer: undefined
       }
 
       BaseModel.call(this, _.defaults(attrs, defaults))
 
       var assetUrl = this.get('soundUrl')
-      if (assetUrl) this.loadSound(this.get('assetUrl'))
+      if (assetUrl) this.loadSound(assetUrl)
     }
 
     return InstrumentModel

@@ -32,11 +32,11 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
         bpm: 120
       }
       scope.song.totalBeats = scope.song.beats * scope.song.measures
+      console.log('scope.song.totalBeats', scope.song.totalBeats)
 
       scope.play = play
       scope.stop = stop
       scope.audio = audio
-
 
       var instruments = [{
         soundUrl: 'assets/sample-kick.mp3',
