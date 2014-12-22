@@ -15,8 +15,12 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel, aud
 
     InstrumentModel.prototype.playSound = function () {
       var buffer = this.get('audioBuffer')
-      if (buffer) audio.play(buffer)
+      if (buffer) {
+        console.log('playing buffer', [this.get('name'), this.get('soundUrl')])
+        audio.play(buffer)
+      }
       else {
+        console.log('playing url', [this.get('name'), this.get('soundUrl')])
         var url = this.get('soundUrl')
         var self = this
         this.loadSound(url).then(function () {

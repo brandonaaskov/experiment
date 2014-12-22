@@ -14,9 +14,11 @@ angular.module('experiment').factory('BeatCollection', function (BaseCollection,
         var nextIndex = (currentIndex + 1 < this.models.length) ? currentIndex + 1 : 0
         this.models[currentIndex].set('active', false)
         this.models[nextIndex].set('active', true)
+        return this.models[nextIndex]
       }
       else if (!_.isEmpty(this.models)) {
         _.first(this.models).set('active', true)
+        return _.first(this.models)
       }
     }
 
@@ -29,11 +31,6 @@ angular.module('experiment').factory('BeatCollection', function (BaseCollection,
       })
 
       BaseCollection.call(this, this.models)
-
-      var self = this
-      $rootScope.$on('activateNextBeat', function () {
-        self.activateNext()
-      })
     }
 
     return BeatCollection

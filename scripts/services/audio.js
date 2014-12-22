@@ -10,13 +10,14 @@ angular.module('experiment').service('audio', function($window, $http, $q) {
   }
 
   var play = function (buffer) {
-    if (_.isArray(buffer)) {
-      _.reduce(buffer, function (audioPipe, source) {
-        console.log('source', source) //TODO finish this reduce method
-        return audioPipe.connect(source)
-      })
-    }
-    else if (buffer instanceof AudioBuffer) {
+    //if (_.isArray(buffer)) {
+    //  _.reduce(buffer, function (audioPipe, source) {
+    //    console.log('source', source) //TODO finish this reduce method
+    //    return audioPipe.connect(source)
+    //  })
+    //}
+    //else
+    if (buffer instanceof AudioBuffer) {
       var source = context.createBufferSource()
       source.buffer = buffer
       source.connect(context.destination)

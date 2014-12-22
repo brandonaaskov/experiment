@@ -13,11 +13,12 @@ angular.module('experiment').directive('track', function (BeatCollection, BeatMo
       for (var i = 0, length = scope.totalBeats; i < length; i++) {
         models.push(new BeatModel())
       }
+
       scope.beatCollection = new BeatCollection(models)
 
-      scope.$on('playInstrument', function () {
-        console.log('playInstrument fired')
-        scope.instrument.playSound()
+      scope.$on('activateNextBeat', function () {
+        var beat = scope.beatCollection.activateNext()
+        if (beat.get('enabled')) scope.instrument.playSound()
       })
     }
   }
