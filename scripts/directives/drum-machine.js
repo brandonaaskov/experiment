@@ -1,10 +1,10 @@
-angular.module('experiment').directive('drumMachine', function ($interval, InstrumentCollection, InstrumentModel, audio) {
+angular.module('experiment').directive('drumMachine', function ($interval, $rootScope, InstrumentModel, audio) {
   return {
     restrict: 'E',
     replace: true,
     templateUrl: 'drum-machine.html',
 
-    link: function (scope) {
+    link: function (scope, element, attrs) {
       var bpmToMs = function (bpm) {
         return Math.round(60/bpm * 1000)
       }
@@ -12,19 +12,13 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
       var play = function () {
         scope.isPlaying = true
         loop = $interval(function () {
-          scope.kickCollection.activateNext()
-          scope.snareCollection.activateNext()
-          scope.hihatCollection.activateNext()
+          $rootScope.$broadcast('activateNextBeat')
         }, bpmToMs(scope.song.bpm))
       }
 
       var stop = function () {
         scope.isPlaying = false
         $interval.cancel(loop)
-      }
-
-      var getTotalBeats = function () {
-        return scope.song.beats * scope.song.measures
       }
 
       var loop = undefined
@@ -34,24 +28,39 @@ angular.module('experiment').directive('drumMachine', function ($interval, Instr
         measures: 2,
         bpm: 120
       }
+      scope.song.totalBeats = scope.song.beats * scope.song.measures
+
+      scope.$watch('song.bpm', function () {
+        if (scope.isPlaying) {
+          scope.stop()
+          scope.play()
+        }
+      })
 
       scope.play = play
       scope.stop = stop
       scope.audio = audio
 
-      var kickModels = []
-      var snareModels = []
-      var hihatModels = []
+      var instruments = [{
+        soundUrl: 'assets/sample-kick.mp3',
+        name: 'kick'
+      },{
+        soundUrl: 'assets/sample-snare.mp3',
+        name: 'snare'
+      },{
+        soundUrl: 'assets/sample-hihat.mp3',
+        name: 'hihat'
+      },{
+        soundUrl: 'assets/sample-clap.mp3',
+        name: 'clap'
+      },{
+        soundUrl: 'assets/sample-clap.mp3',
+        name: 'ALWAYS KICK. BUG!'
+      }]
 
-      for (var i = 0; i < getTotalBeats(); i++) {
-        kickModels.push(new InstrumentModel({soundUrl: 'assets/sample-kick.mp3'}))
-        snareModels.push(new InstrumentModel({soundUrl: 'assets/sample-snare.mp3'}))
-        hihatModels.push(new InstrumentModel({soundUrl: 'assets/sample-hihat.mp3'}))
-      }
-
-      scope.kickCollection = new InstrumentCollection(kickModels)
-      scope.snareCollection = new InstrumentCollection(snareModels)
-      scope.hihatCollection = new InstrumentCollection(hihatModels)
+      scope.instruments = _(instruments).map(function (instrument) {
+        return new InstrumentModel(instrument)
+      })
     }
   }
 })

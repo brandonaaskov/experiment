@@ -1,19 +1,16 @@
-angular.module('experiment').directive('instrument', function ($window, $http, audio) {
+angular.module('experiment').directive('beat', function () {
   return {
     restrict: 'E',
     replace: true,
+    templateUrl: 'beat.html',
     scope: {
       model: '='
     },
-    templateUrl: 'instrument.html',
 
     link: function (scope, element) {
-      scope.enabled = false
-
       element.bind('click', function () {
         scope.$apply(function () {
           scope.model.set('enabled', !scope.model.get('enabled'))
-          scope.model.loadSound()
         })
       })
     }

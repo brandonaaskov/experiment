@@ -1,0 +1,9 @@
+<div class="track">
+  <button class="btn btn-info sample col-md-2"
+          ng-click="instrument.playSound()">
+    {{instrument.get('name')}}<icon glyph="music"></icon>
+  </button>
+
+  <loop class="col-md-10"
+        collection="beatCollection"></loop>
+</div>

@@ -3,28 +3,42 @@ angular.module('experiment').factory('InstrumentModel', function (BaseModel, aud
 
     InstrumentModel.prototype = Object.create(BaseModel.prototype)
 
-    InstrumentModel.prototype.toggleActive = function () {
-      this.attributes.active = !this.attributes.active
-    }
-
     InstrumentModel.prototype.loadSound = function (url) {
       var self = this
-      audio.load(url || this.get('soundUrl')).then(function (source) {
-        self.set('sound', source)
+      var promise = audio.load(url || this.get('soundUrl'))
+      promise.then(function (buffer) {
+        self.set('audioBuffer', buffer)
       })
+
+      return promise
     }
 
     InstrumentModel.prototype.playSound = function () {
-      audio.play(this.get('soundUrl'))
+      var buffer = this.get('audioBuffer')
+      if (buffer) {
+        console.log('playing buffer', [this.get('name'), this.get('soundUrl')])
+        audio.play(buffer)
+      }
+      else {
+        console.log('playing url', [this.get('name'), this.get('soundUrl')])
+        var url = this.get('soundUrl')
+        var self = this
+        this.loadSound(url).then(function () {
+          audio.play(self.get('audioBuffer'))
+        })
+      }
     }
 
     function InstrumentModel (attrs) {
       var defaults = {
-        enabled: false,
-        active: false
+        soundUrl: undefined,
+        audioBuffer: undefined
       }
 
-      BaseModel.call(this, _.defaults(attrs, defaults))
+      BaseModel.call(this, _.defaults(attrs || {}, defaults))
+
+      var assetUrl = this.get('soundUrl')
+      if (assetUrl) this.loadSound(assetUrl)
     }
 
     return InstrumentModel
