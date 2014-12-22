@@ -4,7 +4,7 @@ angular.module('experiment').directive('drumMachine', function ($interval, $root
     replace: true,
     templateUrl: 'drum-machine.html',
 
-    link: function (scope) {
+    link: function (scope, element, attrs) {
       var bpmToMs = function (bpm) {
         return Math.round(60/bpm * 1000)
       }
@@ -12,10 +12,6 @@ angular.module('experiment').directive('drumMachine', function ($interval, $root
       var play = function () {
         scope.isPlaying = true
         loop = $interval(function () {
-          console.log('play the drum machine')
-          //scope.kickCollection.activateNext()
-          //scope.snareCollection.activateNext()
-          //scope.hihatCollection.activateNext()
           $rootScope.$broadcast('activateNextBeat')
         }, bpmToMs(scope.song.bpm))
       }
@@ -34,6 +30,13 @@ angular.module('experiment').directive('drumMachine', function ($interval, $root
       }
       scope.song.totalBeats = scope.song.beats * scope.song.measures
 
+      scope.$watch('song.bpm', function () {
+        if (scope.isPlaying) {
+          scope.stop()
+          scope.play()
+        }
+      })
+
       scope.play = play
       scope.stop = stop
       scope.audio = audio
@@ -47,6 +50,12 @@ angular.module('experiment').directive('drumMachine', function ($interval, $root
       },{
         soundUrl: 'assets/sample-hihat.mp3',
         name: 'hihat'
+      },{
+        soundUrl: 'assets/sample-clap.mp3',
+        name: 'clap'
+      },{
+        soundUrl: 'assets/sample-clap.mp3',
+        name: 'ALWAYS KICK. BUG!'
       }]
 
       scope.instruments = _(instruments).map(function (instrument) {
