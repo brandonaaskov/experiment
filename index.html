@@ -30,12 +30,10 @@
   <script src="build/templates.js"></script> <!-- views compiled into $templateCache -->
   <script src="build/experiment.js"></script> <!-- application build file -->
 </head>
-<body ng-app="experiment">
-  <div class="container-fluid view-animate-container" ng-cloak>
-    <navigation></navigation>
+<body ng-app="experiment" ng-cloak>
+  <navigation layout="row"></navigation>
 
-    <div ng-view class="page container-fluid view-animate"></div>
-  </div>
+  <div ng-view layout="column" class="page"></div>
 
   <!-- segment io -->
   <script type="text/javascript">
