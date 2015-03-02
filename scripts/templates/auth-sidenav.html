@@ -1,0 +1,19 @@
+<md-sidenav class="md-sidenav-right auth"
+            md-component-id="auth"
+            md-is-open="false">
+  <md-toolbar class="md-accent md-hue-3 white">
+    <h1 class="md-toolbar-tools" layout="row" layout-align="end">
+      <span ng-hide="user">Login</span>
+      <span ng-show="user">{{user.displayName}}</span>
+    </h1>
+  </md-toolbar>
+
+  <md-content class="content">
+    <md-list class="services">
+      <auth-service service="facebook"></auth-service>
+      <auth-service service="google"></auth-service>
+      <auth-service service="twitter"></auth-service>
+      <auth-service service="github"></auth-service>
+    </md-list>
+  </md-content>
+</md-sidenav>

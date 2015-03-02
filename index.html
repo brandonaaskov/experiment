@@ -3,7 +3,7 @@
 <head lang="en">
   <title>Experiment</title>
 
-  <base href="/">
+  <base href="/#/">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,8 +18,11 @@
   <script src="vendor/angular-cookies/angular-cookies.js"></script>
 
   <!-- ui/ux framework -->
+  <script src="vendor/angular-aria/angular-aria.min.js"></script>
+  <script src="vendor/angular-animate/angular-animate.min.js"></script>
   <script src="vendor/angular-material/angular-material.min.js"></script>
   <link rel="stylesheet" href="vendor/angular-material/angular-material.min.css">
+  <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css">
 
   <!-- firebase -->
   <script src="vendor/firebase/firebase-debug.js"></script>
@@ -31,7 +34,7 @@
   <script src="build/experiment.js"></script> <!-- application build file -->
 </head>
 <body ng-app="experiment" ng-cloak>
-  <navigation layout="row"></navigation>
+  <navigation></navigation>
 
   <div ng-view layout="column" class="page"></div>
 

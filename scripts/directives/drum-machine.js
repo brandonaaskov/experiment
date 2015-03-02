@@ -42,19 +42,19 @@ angular.module('experiment').directive('drumMachine', function ($interval, $root
       scope.audio = audio
 
       var instruments = [{
-        soundUrl: 'assets/sample-kick.mp3',
+        soundUrl: 'assets/sounds/sample-kick.mp3',
         name: 'kick'
       },{
-        soundUrl: 'assets/sample-snare.mp3',
+        soundUrl: 'assets/sounds/sample-snare.mp3',
         name: 'snare'
       },{
-        soundUrl: 'assets/sample-hihat.mp3',
+        soundUrl: 'assets/sounds/sample-hihat.mp3',
         name: 'hihat'
       },{
-        soundUrl: 'assets/sample-clap.mp3',
+        soundUrl: 'assets/sounds/sample-clap.mp3',
         name: 'clap'
       },{
-        soundUrl: 'assets/sample-clap.mp3',
+        soundUrl: 'assets/sounds/sample-clap.mp3',
         name: 'ALWAYS KICK. BUG!'
       }]
 

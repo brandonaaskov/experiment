@@ -1,6 +1,9 @@
 angular.module('experiment', [
   'ngRoute',
   'ngCookies',
+  'ngAnimate',
+  'ngMaterial',
+  'ngAria',
   'templates',
   'firebase'
 ]).run(function ($cookies, utils, analytics) {
