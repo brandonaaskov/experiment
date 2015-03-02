@@ -1,9 +1,9 @@
-<div class="track">
-  <button class="btn btn-info sample col-md-2"
-          ng-click="instrument.playSound()">
-    {{instrument.get('name')}}<icon glyph="music"></icon>
-  </button>
+<div class="track" layout="row">
+  <md-button class="sample"
+             ng-click="instrument.playSound()">
+    {{instrument.get('name')}}
+    <md-icon md-font-icon="fa fa-music"></md-icon>
+  </md-button>
 
-  <loop class="col-md-10"
-        collection="beatCollection"></loop>
+  <loop collection="beatCollection"></loop>
 </div>

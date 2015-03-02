@@ -1,26 +1,20 @@
 angular.module('experiment').config(function($routeProvider, $locationProvider) {
-  var routes = {
-    '/': {
+  $routeProvider
+    .when('/', {
       templateUrl: 'home.html'
-    },
-    '/speech': {
+    })
+    .when('/speech', {
       templateUrl: 'speech.html'
-    },
-    '/splice': {
-      templateUrl: 'splice.html'
-    },
-    '/404': {
+    })
+    .when('/drum', {
+      templateUrl: 'drum-machine.html'
+    })
+    .when('/404', {
       templateUrl: '404.html'
-    }
-  }
+    })
+    .otherwise({
+      redirectTo: '/404'
+    })
 
-  $locationProvider.html5Mode(true)
-
-  for (var route in routes) {
-    $routeProvider.when(route, routes[route])
-  }
-
-  $routeProvider.otherwise({
-    redirectTo: '/404'
-  })
+  $locationProvider.html5Mode(false)
 })

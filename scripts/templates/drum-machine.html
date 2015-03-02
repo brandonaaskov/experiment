@@ -1,12 +1,14 @@
 <div class="drum-machine">
-  <div class="controls row">
-    <button class="btn btn-lg btn-success col-md-2"
-            ng-show="!isPlaying"
-            ng-click="play()">Play</button>
+  <div class="controls" layout="row">
+    <md-button ng-show="!isPlaying"
+               ng-click="play()">
+      Play
+    </md-button>
 
-    <button class="btn btn-lg btn-danger col-md-2"
-            ng-show="isPlaying"
-            ng-click="stop()">Stop</button>
+    <md-button ng-show="isPlaying"
+               ng-click="stop()">
+      Stop
+    </md-button>
 
     <form class="form-inline col-md-2" role="form">
       <div class="form-group">
@@ -20,8 +22,7 @@
     </form>
   </div>
 
-  <track class="row"
-         ng-repeat="instrument in instruments"
+  <track ng-repeat="instrument in instruments"
          instrument="instrument"
-         total-beats="song.totalBeats"></track>
+         total-beats="song.totalBeats">
 </div>
