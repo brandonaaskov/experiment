@@ -1,24 +1,30 @@
-angular.module('experiment').service('auth', function($firebase, $firebaseAuth, $cookies, config, $rootScope) {
+angular.module('experiment').service('auth', function($firebase, $firebaseAuth, $cookies, config, $q) {
   var auth = $firebaseAuth(config.firebase.default)
   var users = $firebase(config.firebase.users)
-  var user = undefined
-  var unbindUser = undefined
+  var deferred = $q.defer()
 
-  var bindUser = function () {
+  var init = function () {
+    var user = getUser()
+    if (user) {
+      deferred.resolve(user)
+    }
+  }
+
+  var getUser = function () {
     var authData = auth.$getAuth()
-    user = (authData) ? $firebase(config.firebase.users.child(authData.uid)).$asObject() : null
 
-    $rootScope.user = user
-    if (user) user.$bindTo($rootScope, "user").then(function (unbind) {
-      unbindUser = unbind
-    })
+    return (authData) ? authData[authData.provider] : null
   }
 
   var updateUser = function(authData) {
-    if (auth.$getAuth()) users.$update(authData.uid, authData[authData.provider])
-    else users.$set(authData.uid, authData[authData.provider])
+    if (auth.$getAuth()) {
+      users.$update(authData.uid, authData[authData.provider])
+    }
+    else {
+      users.$set(authData.uid, authData[authData.provider])
+    }
 
-    bindUser()
+    deferred.resolve(getUser())
   }
 
   var authError = function (error) {
@@ -28,43 +34,41 @@ angular.module('experiment').service('auth', function($firebase, $firebaseAuth, 
   var login = function(service) {
     switch (service) {
       case 'facebook':
-        return auth.$authWithOAuthPopup('facebook')
-            .then(updateUser)
-            .catch(authError)
+        auth.$authWithOAuthPopup('facebook').then(updateUser).catch(authError)
+        break
       case 'github':
-        return auth.$authWithOAuthPopup('github')
-            .then(updateUser)
-            .catch(authError)
+        auth.$authWithOAuthPopup('github').then(updateUser).catch(authError)
+        break
       case 'twitter':
-        return auth.$authWithOAuthPopup('twitter')
-            .then(updateUser)
-            .catch(authError)
+        auth.$authWithOAuthPopup('twitter').then(updateUser).catch(authError)
+        break
       case 'google':
-        return auth.$authWithOAuthPopup('google')
-            .then(updateUser)
-            .catch(authError)
+        auth.$authWithOAuthPopup('google').then(updateUser).catch(authError)
+        break
     }
+
+    return deferred.promise
   }
 
   var logout = function () {
-    unbindUser()
     auth.$unauth()
-    $rootScope.user = null
+    deferred = $q.defer()
   }
   
-  var getUserService = function (service) {
-    if (!_(user).has('$id')) return;
+  var isService = function (provider) {
+    if (!_(auth.$getAuth()).has('provider')) {
+      return
+    }
 
-    return !!user.$id.match(service)
+    return auth.$getAuth().provider === provider
   }
 
-  // init
-  bindUser()
+  init()
 
   return {
     login: login,
     logout: logout,
-    user: user,
-    getUserService: getUserService
+    isService: isService,
+    getUser: getUser
   }
 })

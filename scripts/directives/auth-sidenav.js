@@ -4,7 +4,11 @@ angular.module('experiment').directive('authSidenav', function (auth) {
     replace: true,
     templateUrl: 'auth-sidenav.html',
     link: function (scope) {
-      scope.user = auth.user
+      scope.user = auth.getUser()
+
+      auth.login().then(function (user) {
+        scope.user = user
+      })
     }
   }
 })
