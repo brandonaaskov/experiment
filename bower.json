@@ -19,8 +19,6 @@
     "angular-cookies": "latest",
     "angular-mocks": "latest",
     "angular-route": "~1.3.6",
-    "bootstrap": "latest",
-    "angular-bootstrap": "latest",
     "angular-file-upload": "latest",
     "videojs": "latest",
     "filepicker": "latest",
@@ -28,8 +26,10 @@
     "firebase": "latest",
     "speech-synthesis": "latest",
     "underscore": "latest",
-    "angular-ui-bootstrap": "~0.12.0",
-    "elements": "git@github.com:Oreolek/elements.git"
+    "elements": "git@github.com:Oreolek/elements.git",
+    "angular-material": "~0.8.2",
+    "jquery": "~2.1.3",
+    "font-awesome": "~4.3.0"
   },
   "resolutions": {
     "angular": "~1.3.6",

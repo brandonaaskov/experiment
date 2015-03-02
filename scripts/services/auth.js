@@ -39,6 +39,10 @@ angular.module('experiment').service('auth', function($firebase, $firebaseAuth, 
         return auth.$authWithOAuthPopup('twitter')
             .then(updateUser)
             .catch(authError)
+      case 'google':
+        return auth.$authWithOAuthPopup('google')
+            .then(updateUser)
+            .catch(authError)
     }
   }
 
@@ -47,12 +51,20 @@ angular.module('experiment').service('auth', function($firebase, $firebaseAuth, 
     auth.$unauth()
     $rootScope.user = null
   }
+  
+  var getUserService = function (service) {
+    if (!_(user).has('$id')) return;
+
+    return !!user.$id.match(service)
+  }
 
   // init
   bindUser()
 
   return {
     login: login,
-    logout: logout
+    logout: logout,
+    user: user,
+    getUserService: getUserService
   }
 })

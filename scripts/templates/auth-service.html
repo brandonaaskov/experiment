@@ -1,0 +1,30 @@
+<md-item class="auth-service">
+  <md-item-content class="service">
+    <div class="md-tile-left">
+      <md-button class="md-fab bg-{{service}}"
+                 ng-disabled="isConnected()"
+                 ng-click="login()"
+                 aria-label="login with {{service}}">
+        <md-icon md-font-icon="fa fa-{{service}}"></md-icon>
+      </md-button>
+    </div>
+    <div class="md-tile-content" layout="column" layout-align="center end">
+      <md-button flex
+                 ng-disabled="true"
+                 ng-hide="isConnected()">
+        Not Connected
+      </md-button>
+
+      <md-button ng-href="{{user.cachedUserProfile.link}}"
+                 target="_blank"
+                 ng-show="isConnected()">
+        {{service}} profile
+      </md-button>
+
+      <md-button ng-click="logout()"
+                 ng-show="isConnected()">
+        Sign Out
+      </md-button>
+    </div>
+  </md-item-content>
+</md-item>
