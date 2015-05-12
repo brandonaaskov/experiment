@@ -9,18 +9,19 @@ var pkg = require('./package.json'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
     templateCache = require('gulp-angular-templatecache')
+    babel = require('gulp-babel')
 
 // non-gulp stuff i need
 var http = require('http'),
     connect = require('connect')
 
 var paths = {
-  scripts: ['scripts/**/*.js'],
+  scripts: ['src/**/*.js'],
   tests: ['tests/**/*.js'],
   styles: ['styles/**/*.less'],
   views: [
     'views/**/*.html',
-    'scripts/templates/**/*.html'
+    'src/templates/**/*.html'
   ],
   concatenatedScripts: ['build/' + pkg.name + '.js']
 }
@@ -33,6 +34,7 @@ gulp.task('compileScripts', function () {
   gulp.src(paths.scripts)
     .pipe(plumber())
     .pipe(concat(pkg.name + '.js'))
+    .pipe(babel())
     .pipe(gulp.dest(buildLocation))
 })
 

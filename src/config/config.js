@@ -1,6 +1,7 @@
 angular.module('experiment').service('config', function ($window) {
   return {
     env: 'development',
+    filepicker: 'AQPk06MnRzuRnlvIDdgw4z',
     firebase: {
       default: new $window.Firebase('https://gunslngr.firebaseio.com/'),
       users: new $window.Firebase('https://gunslngr.firebaseio.com/users'),

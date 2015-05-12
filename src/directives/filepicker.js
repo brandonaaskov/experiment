@@ -4,7 +4,7 @@ angular.module('experiment').directive('filepicker', function($window, firebase,
     restrict: 'A',
     link: function(scope) {
       scope.filepicker = $window.filepicker
-      return scope.filepicker.setKey('AiCDu1zCuQQysPoX9Mb9bz')
+      return scope.filepicker.setKey('AQPk06MnRzuRnlvIDdgw4z')
     },
     controller: function($scope) {
       var error, options, saveUploads, startJobs, success
