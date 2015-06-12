@@ -20,7 +20,8 @@
     "gulp-ngmin": "~0.2.0",
     "gulp-plumber": "~0.6.1",
     "gulp-rename": "~1.2.0",
-    "gulp-uglify": "~0.2.1"
+    "gulp-uglify": "~0.2.1",
+    "serve-static": "^1.9.3"
   },
   "dependencies": {}
 }
