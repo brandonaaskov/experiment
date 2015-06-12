@@ -2,6 +2,7 @@
 var pkg = require('./package.json'),
     gulp = require('gulp'),
     plumber = require('gulp-plumber'),
+    sourcemaps = require('gulp-sourcemaps'),
     less = require('gulp-less'),
     concat = require('gulp-concat'),
     concatCss = require('gulp-concat-css'),
@@ -9,7 +10,6 @@ var pkg = require('./package.json'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
     templateCache = require('gulp-angular-templatecache')
-    babel = require('gulp-babel')
 
 // non-gulp stuff i need
 var http = require('http'),
@@ -26,15 +26,16 @@ var paths = {
   concatenatedScripts: ['build/' + pkg.name + '.js']
 }
 
-var serverPort = 3000,
+var serverPort = 1337,
     buildLocation = 'build'
 
 
 gulp.task('compileScripts', function () {
   gulp.src(paths.scripts)
     .pipe(plumber())
+    .pipe(sourcemaps.init())
     .pipe(concat(pkg.name + '.js'))
-    .pipe(babel())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest(buildLocation))
 })
 
